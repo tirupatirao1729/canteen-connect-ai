@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -9,19 +11,23 @@ import {
   User, 
   Star, 
   Menu, 
-  X 
+  X,
+  LogOut,
+  Shield
 } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const cartItems = 0; // This will be connected to cart state later
+  const { user, isAdmin, isGuest, logout } = useAuth();
+  const { getTotalItems } = useCart();
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/menu', label: 'Menu', icon: UtensilsCrossed },
     { path: '/reviews', label: 'Reviews', icon: Star },
-    { path: '/profile', label: 'Profile', icon: User },
+    ...(user && !isGuest ? [{ path: '/profile', label: 'Profile', icon: User }] : []),
+    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
   ];
 
   const isActivePath = (path: string) => location.pathname === path;
@@ -67,22 +73,39 @@ const Navigation = () => {
             <Link to="/cart">
               <Button variant="outline" size="sm" className="relative hover:bg-accent">
                 <ShoppingCart className="w-4 h-4" />
-                {cartItems > 0 && (
+                {getTotalItems() > 0 && (
                   <Badge 
                     variant="default" 
                     className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-primary text-primary-foreground text-xs"
                   >
-                    {cartItems}
+                    {getTotalItems()}
                   </Badge>
                 )}
               </Button>
             </Link>
             
-            <Link to="/login">
-              <Button size="sm" className="bg-gradient-primary hover:bg-primary-hover">
-                Login
-              </Button>
-            </Link>
+            {user || isGuest ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  {user ? `Hi, ${user.fullName.split(' ')[0]}` : 'Guest'}
+                </span>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={logout}
+                  className="hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button size="sm" className="bg-gradient-primary hover:bg-primary-hover">
+                  Login
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <Button

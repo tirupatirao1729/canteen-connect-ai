@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, register, loginAsGuest, loading } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showAdminCode, setShowAdminCode] = useState(false);
@@ -42,19 +44,31 @@ const Login = () => {
     role: 'Student'
   });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    toast({
-      title: "Login Initiated",
-      description: "To enable authentication, connect to Supabase in project settings.",
-    });
+    const success = await login(
+      loginData.email, 
+      loginData.password, 
+      isAdmin ? loginData.adminCode : undefined
+    );
     
-    // TODO: Connect to Supabase authentication
-    console.log('Login attempt:', loginData);
+    if (success) {
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+      });
+      navigate(isAdmin ? '/admin' : '/menu');
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Please check your credentials and try again.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate password match
@@ -77,16 +91,31 @@ const Login = () => {
       return;
     }
     
-    toast({
-      title: "Account Creation Started",
-      description: "To complete registration, connect to Supabase for authentication.",
+    const success = await register({
+      fullName: registerData.fullName,
+      email: registerData.email,
+      phone: registerData.phone,
+      password: registerData.password,
+      role: registerData.role as 'Student' | 'Teacher'
     });
     
-    // TODO: Connect to Supabase authentication
-    console.log('Register attempt:', registerData);
+    if (success) {
+      toast({
+        title: "Account Created",
+        description: "Welcome to Canteen Connect!",
+      });
+      navigate('/menu');
+    } else {
+      toast({
+        title: "Registration Failed",
+        description: "Please try again with different details.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleGuestContinue = () => {
+    loginAsGuest();
     toast({
       title: "Welcome, Guest!",
       description: "You can browse the menu with limited features.",
@@ -211,8 +240,12 @@ const Login = () => {
                     </div>
                   )}
 
-                  <Button type="submit" className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce">
-                    Sign In
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce"
+                    disabled={loading}
+                  >
+                    {loading ? 'Signing In...' : 'Sign In'}
                   </Button>
 
                   <div className="text-center">
@@ -312,8 +345,12 @@ const Login = () => {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-gradient-secondary hover:bg-secondary-hover btn-bounce">
-                    Create Account
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-secondary hover:bg-secondary-hover btn-bounce"
+                    disabled={loading}
+                  >
+                    {loading ? 'Creating Account...' : 'Create Account'}
                   </Button>
                 </form>
               </TabsContent>

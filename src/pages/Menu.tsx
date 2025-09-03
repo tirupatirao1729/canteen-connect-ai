@@ -1,8 +1,13 @@
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
+import { MENU_ITEMS, CATEGORIES, TYPES } from '@/data/mockData';
 import { 
   Search, 
   Filter, 
@@ -16,92 +21,15 @@ import {
 } from 'lucide-react';
 
 const Menu = () => {
+  const { addToCart, removeFromCart, getItemQuantity, getTotalItems } = useCart();
+  const { user, isGuest } = useAuth();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedType, setSelectedType] = useState('All');
-  const [cart, setCart] = useState<{[key: number]: number}>({});
-
-  // Mock menu data
-  const categories = ['All', 'Breakfast', 'Main Course', 'Snacks', 'Beverages', 'Desserts'];
-  const types = ['All', 'Veg', 'Non-Veg'];
-
-  const menuItems = [
-    {
-      id: 1,
-      name: "Masala Dosa",
-      category: "Breakfast",
-      price: 45,
-      type: "Veg",
-      rating: 4.8,
-      prepTime: "15 min",
-      description: "Crispy dosa with spiced potato filling and chutneys",
-      isSpecial: true,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      name: "Chicken Biryani",
-      category: "Main Course",
-      price: 120,
-      type: "Non-Veg",
-      rating: 4.9,
-      prepTime: "25 min",
-      description: "Aromatic basmati rice with tender chicken and spices",
-      isSpecial: true,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 3,
-      name: "Veg Sandwich",
-      category: "Snacks",
-      price: 35,
-      type: "Veg",
-      rating: 4.6,
-      prepTime: "8 min",
-      description: "Fresh vegetables with mint chutney in toasted bread",
-      isSpecial: false,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 4,
-      name: "Masala Chai",
-      category: "Beverages",
-      price: 15,
-      type: "Veg",
-      rating: 4.7,
-      prepTime: "5 min",
-      description: "Traditional Indian tea with aromatic spices",
-      isSpecial: false,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 5,
-      name: "Paneer Butter Masala",
-      category: "Main Course",
-      price: 95,
-      type: "Veg",
-      rating: 4.8,
-      prepTime: "20 min",
-      description: "Rich and creamy paneer curry with butter naan",
-      isSpecial: false,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 6,
-      name: "Samosa",
-      category: "Snacks",
-      price: 20,
-      type: "Veg",
-      rating: 4.5,
-      prepTime: "5 min",
-      description: "Crispy pastry filled with spiced potatoes",
-      isSpecial: false,
-      image: "/placeholder.svg"
-    }
-  ];
 
   // Filter menu items
-  const filteredItems = menuItems.filter(item => {
+  const filteredItems = MENU_ITEMS.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
@@ -110,22 +38,23 @@ const Menu = () => {
     return matchesSearch && matchesCategory && matchesType;
   });
 
-  const addToCart = (itemId: number) => {
-    setCart(prev => ({
-      ...prev,
-      [itemId]: (prev[itemId] || 0) + 1
-    }));
+  const handleAddToCart = (item: typeof MENU_ITEMS[0]) => {
+    addToCart(item);
+    toast({
+      title: "Added to Cart",
+      description: `${item.name} has been added to your cart.`,
+    });
   };
 
-  const removeFromCart = (itemId: number) => {
-    setCart(prev => ({
-      ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
-    }));
-  };
-
-  const getTotalItems = () => {
-    return Object.values(cart).reduce((sum, count) => sum + count, 0);
+  const handleRemoveFromCart = (itemId: number) => {
+    const item = MENU_ITEMS.find(i => i.id === itemId);
+    removeFromCart(itemId);
+    if (item) {
+      toast({
+        title: "Removed from Cart",
+        description: `${item.name} quantity decreased.`,
+      });
+    }
   };
 
   return (
@@ -160,19 +89,19 @@ const Menu = () => {
               <Filter className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium">Category:</span>
               <div className="flex flex-wrap gap-2">
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`category-pill ${
-                      selectedCategory === category 
-                        ? 'bg-primary text-primary-foreground' 
-                        : ''
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
+            {CATEGORIES.map(category => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`category-pill ${
+                  selectedCategory === category 
+                    ? 'bg-primary text-primary-foreground' 
+                    : ''
+                }`}
+              >
+                {category}
+              </button>
+            ))}
               </div>
             </div>
 
@@ -180,19 +109,19 @@ const Menu = () => {
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Type:</span>
               <div className="flex gap-2">
-                {types.map(type => (
-                  <button
-                    key={type}
-                    onClick={() => setSelectedType(type)}
-                    className={`category-pill ${
-                      selectedType === type 
-                        ? 'bg-secondary text-secondary-foreground' 
-                        : ''
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
+            {TYPES.map(type => (
+              <button
+                key={type}
+                onClick={() => setSelectedType(type)}
+                className={`category-pill ${
+                  selectedType === type 
+                    ? 'bg-secondary text-secondary-foreground' 
+                    : ''
+                }`}
+              >
+                {type}
+              </button>
+            ))}
               </div>
             </div>
           </div>
@@ -201,7 +130,7 @@ const Menu = () => {
         {/* Results Count */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-muted-foreground">
-            Showing {filteredItems.length} of {menuItems.length} items
+            Showing {filteredItems.length} of {MENU_ITEMS.length} items
           </p>
           
           {/* Cart Summary */}
@@ -268,22 +197,22 @@ const Menu = () => {
                     </span>
                     
                     <div className="flex items-center space-x-2">
-                      {cart[item.id] > 0 ? (
+                      {getItemQuantity(item.id) > 0 ? (
                         <div className="flex items-center space-x-2">
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => handleRemoveFromCart(item.id)}
                             className="h-8 w-8 p-0"
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
                           <span className="font-medium w-8 text-center">
-                            {cart[item.id]}
+                            {getItemQuantity(item.id)}
                           </span>
                           <Button
                             size="sm"
-                            onClick={() => addToCart(item.id)}
+                            onClick={() => handleAddToCart(item)}
                             className="h-8 w-8 p-0 bg-primary hover:bg-primary-hover"
                           >
                             <Plus className="h-4 w-4" />
@@ -292,7 +221,7 @@ const Menu = () => {
                       ) : (
                         <Button
                           size="sm"
-                          onClick={() => addToCart(item.id)}
+                          onClick={() => handleAddToCart(item)}
                           className="bg-gradient-primary hover:bg-primary-hover btn-bounce"
                         >
                           <Plus className="w-4 h-4 mr-2" />
@@ -331,13 +260,15 @@ const Menu = () => {
         {/* Fixed Cart Button */}
         {getTotalItems() > 0 && (
           <div className="fixed bottom-6 right-6 z-50">
-            <Button 
-              size="lg" 
-              className="rounded-full bg-gradient-primary hover:bg-primary-hover shadow-lg animate-bounce-gentle"
-            >
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              View Cart ({getTotalItems()})
-            </Button>
+            <Link to="/cart">
+              <Button 
+                size="lg" 
+                className="rounded-full bg-gradient-primary hover:bg-primary-hover shadow-lg animate-bounce-gentle"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                View Cart ({getTotalItems()})
+              </Button>
+            </Link>
           </div>
         )}
       </div>
