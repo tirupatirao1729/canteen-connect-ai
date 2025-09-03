@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +20,8 @@ import {
 } from 'lucide-react';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showAdminCode, setShowAdminCode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -41,19 +44,56 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    toast({
+      title: "Login Initiated",
+      description: "To enable authentication, connect to Supabase in project settings.",
+    });
+    
     // TODO: Connect to Supabase authentication
     console.log('Login attempt:', loginData);
   };
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password match
+    if (registerData.password !== registerData.confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate phone number
+    if (!/^\d{10}$/.test(registerData.phone)) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    toast({
+      title: "Account Creation Started",
+      description: "To complete registration, connect to Supabase for authentication.",
+    });
+    
     // TODO: Connect to Supabase authentication
     console.log('Register attempt:', registerData);
   };
 
   const handleGuestContinue = () => {
-    // TODO: Set guest mode
-    console.log('Continue as guest');
+    toast({
+      title: "Welcome, Guest!",
+      description: "You can browse the menu with limited features.",
+    });
+    
+    // Navigate to menu page as guest
+    navigate('/menu');
   };
 
   return (
