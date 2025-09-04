@@ -47,13 +47,9 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const success = await login(
-      loginData.email, 
-      loginData.password, 
-      isAdmin ? loginData.adminCode : undefined
-    );
+    const result = await login(loginData.email, loginData.password);
     
-    if (success) {
+    if (result.success) {
       toast({
         title: "Login Successful",
         description: "Welcome back!",

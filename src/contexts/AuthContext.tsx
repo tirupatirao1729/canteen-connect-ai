@@ -53,16 +53,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const { data: profile } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', session.user.id)
+            .eq('user_id', session.user.id)
             .single();
             
           if (profile) {
             setUser({
-              id: profile.id,
+              id: profile.user_id,
               fullName: profile.full_name || 'User',
               email: session.user.email || '',
               phone: profile.phone || '',
-              role: profile.role || 'Student'
+              role: (profile.role as 'Student' | 'Teacher' | 'Admin') || 'Student'
             });
           }
         } else {
