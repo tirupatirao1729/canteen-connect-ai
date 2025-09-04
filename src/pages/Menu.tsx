@@ -17,8 +17,17 @@ import {
   Minus, 
   Leaf, 
   Utensils,
-  ShoppingCart
+  ShoppingCart,
+  ChevronDown,
+  ImageIcon
 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Menu = () => {
   const { addToCart, removeFromCart, getItemQuantity, getTotalItems } = useCart();
@@ -88,41 +97,35 @@ const Menu = () => {
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium">Category:</span>
-              <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map(category => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`category-pill ${
-                  selectedCategory === category 
-                    ? 'bg-primary text-primary-foreground' 
-                    : ''
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-              </div>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map(category => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Type Filter */}
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Type:</span>
-              <div className="flex gap-2">
-            {TYPES.map(type => (
-              <button
-                key={type}
-                onClick={() => setSelectedType(type)}
-                className={`category-pill ${
-                  selectedType === type 
-                    ? 'bg-secondary text-secondary-foreground' 
-                    : ''
-                }`}
-              >
-                {type}
-              </button>
-            ))}
-              </div>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TYPES.map(type => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
@@ -154,8 +157,19 @@ const Menu = () => {
               
               <CardContent className="p-0">
                 {/* Image */}
-                <div className="aspect-video bg-gradient-subtle rounded-t-xl flex items-center justify-center">
-                  <Utensils className="w-12 h-12 text-muted-foreground group-hover:scale-110 transition-transform duration-200" />
+                <div className="aspect-video bg-gradient-subtle rounded-t-xl flex items-center justify-center overflow-hidden">
+                  {item.image && item.image !== '/placeholder.svg' ? (
+                    <img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-muted-foreground">
+                      <ImageIcon className="w-8 h-8 mb-2" />
+                      <span className="text-xs">No image</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="p-4">

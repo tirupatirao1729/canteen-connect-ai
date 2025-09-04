@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowRight, 
   Clock, 
@@ -19,36 +21,56 @@ import chickenBiryani from '@/assets/chicken-biryani.jpg';
 import masalaDosa from '@/assets/masala-dosa.jpg';
 
 const Home = () => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
   // Mock data for special items
   const specialItems = [
     {
       id: 1,
       name: "Masala Dosa",
+      category: "South Indian",
       price: 45,
-      image: masalaDosa,
+      type: 'Veg' as const,
       rating: 4.8,
-      isVeg: true,
-      preparationTime: "15 min"
+      prepTime: "15 min",
+      description: "Crispy dosa with spicy potato filling",
+      isSpecial: true,
+      image: masalaDosa
     },
     {
       id: 2,
       name: "Chicken Biryani",
+      category: "Main Course",
       price: 120,
-      image: chickenBiryani, 
+      type: 'Non-Veg' as const,
       rating: 4.9,
-      isVeg: false,
-      preparationTime: "20 min"
+      prepTime: "20 min",
+      description: "Aromatic basmati rice with tender chicken",
+      isSpecial: true,
+      image: chickenBiryani
     },
     {
       id: 3,
       name: "Veg Sandwich",
+      category: "Snacks",
       price: 35,
-      image: "/placeholder.svg",
+      type: 'Veg' as const,
       rating: 4.6,
-      isVeg: true,
-      preparationTime: "10 min"
+      prepTime: "10 min",
+      description: "Fresh vegetables with mayo and chutney",
+      isSpecial: true,
+      image: "/placeholder.svg"
     }
   ];
+
+  const handleAddToCart = (item: typeof specialItems[0]) => {
+    addToCart(item);
+    toast({
+      title: "Added to Cart",
+      description: `${item.name} has been added to your cart.`,
+    });
+  };
 
   const stats = [
     { icon: Users, label: "Happy Students", value: "2,500+" },
@@ -168,7 +190,7 @@ const Home = () => {
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-semibold text-lg">{item.name}</h3>
-                      {item.isVeg && (
+                      {item.type === 'Veg' && (
                         <Badge variant="outline" className="text-success border-success">
                           <Leaf className="w-3 h-3 mr-1" />
                           Veg
@@ -184,13 +206,16 @@ const Home = () => {
                         </div>
                         <div className="flex items-center text-muted-foreground">
                           <Clock className="w-4 h-4 mr-1" />
-                          <span className="text-sm">{item.preparationTime}</span>
+                          <span className="text-sm">{item.prepTime}</span>
                         </div>
                       </div>
                       <span className="text-xl font-bold text-primary">₹{item.price}</span>
                     </div>
                     
-                    <Button className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce">
+                    <Button 
+                      className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce"
+                      onClick={() => handleAddToCart(item)}
+                    >
                       Add to Cart
                     </Button>
                   </div>
