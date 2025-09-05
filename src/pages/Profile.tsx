@@ -13,16 +13,19 @@ import {
   CreditCard,
   Settings
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Profile = () => {
-  // Mock user data - TODO: Connect to Supabase authentication
+  const { user: authUser } = useAuth();
   const user = {
-    name: "Arjun Kumar",
-    email: "arjun.kumar@college.edu",
-    phone: "+91 9876543210",
-    role: "Student",
-    joinDate: "2024-01-01",
-    avatar: "AK"
+    name: authUser?.fullName || "User",
+    email: authUser?.email || "—",
+    phone: authUser?.phone || "—",
+    role: authUser?.role || "Student",
+    joinDate: new Date().toISOString(),
+    avatar: authUser?.fullName
+      ? authUser.fullName.split(' ').map(p => p[0]).join('').slice(0,2).toUpperCase()
+      : "U"
   };
 
   // Mock order history

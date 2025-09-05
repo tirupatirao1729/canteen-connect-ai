@@ -50,11 +50,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           // Get user profile data
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
+          const { data: profile } = await (supabase
+            .from('profiles' as any)
+            .select('user_id, full_name, phone, role')
             .eq('user_id', session.user.id)
-            .single();
+            .maybeSingle());
             
           if (profile) {
             setUser({

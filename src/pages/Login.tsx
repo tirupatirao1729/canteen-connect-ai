@@ -87,7 +87,7 @@ const Login = () => {
       return;
     }
     
-    const success = await register({
+    const result = await register({
       fullName: registerData.fullName,
       email: registerData.email,
       phone: registerData.phone,
@@ -95,7 +95,7 @@ const Login = () => {
       role: registerData.role as 'Student' | 'Teacher'
     });
     
-    if (success) {
+    if (result.success) {
       toast({
         title: "Account Created",
         description: "Welcome to Canteen Connect!",
@@ -104,7 +104,7 @@ const Login = () => {
     } else {
       toast({
         title: "Registration Failed",
-        description: "Please try again with different details.",
+        description: result.error || "Please try again with different details.",
         variant: "destructive",
       });
     }
