@@ -14,33 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
+      orders: {
         Row: {
-          created_at: string
-          full_name: string
+          estimated_delivery_time: string | null
           id: string
-          phone: string | null
-          role: string
+          items: Json
+          order_number: string
+          payment_method: string | null
+          payment_status: string | null
+          placed_at: string
+          room_number: string | null
+          special_instructions: string | null
+          status: string
+          total_amount: number
           updated_at: string
           user_id: string
         }
         Insert: {
-          created_at?: string
-          full_name: string
+          estimated_delivery_time?: string | null
           id?: string
-          phone?: string | null
-          role?: string
+          items?: Json
+          order_number: string
+          payment_method?: string | null
+          payment_status?: string | null
+          placed_at?: string
+          room_number?: string | null
+          special_instructions?: string | null
+          status?: string
+          total_amount: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          estimated_delivery_time?: string | null
+          id?: string
+          items?: Json
+          order_number?: string
+          payment_method?: string | null
+          payment_status?: string | null
+          placed_at?: string
+          room_number?: string | null
+          special_instructions?: string | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          branch: string | null
+          created_at: string
+          date_of_birth: string | null
+          full_name: string
+          id: string
+          phone: string | null
+          profile_photo_url: string | null
+          role: string
+          roll_number: string | null
+          updated_at: string
+          user_id: string
+          year_of_study: number | null
+        }
+        Insert: {
+          branch?: string | null
           created_at?: string
+          date_of_birth?: string | null
+          full_name: string
+          id?: string
+          phone?: string | null
+          profile_photo_url?: string | null
+          role?: string
+          roll_number?: string | null
+          updated_at?: string
+          user_id: string
+          year_of_study?: number | null
+        }
+        Update: {
+          branch?: string | null
+          created_at?: string
+          date_of_birth?: string | null
           full_name?: string
           id?: string
           phone?: string | null
+          profile_photo_url?: string | null
           role?: string
+          roll_number?: string | null
           updated_at?: string
           user_id?: string
+          year_of_study?: number | null
         }
         Relationships: []
       }
