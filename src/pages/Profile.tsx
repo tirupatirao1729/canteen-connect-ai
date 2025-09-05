@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ProfileEdit from '@/components/ProfileEdit';
 import { 
   User, 
   Mail, 
@@ -11,21 +14,30 @@ import {
   Star,
   MapPin,
   CreditCard,
-  Settings
+  Settings,
+  GraduationCap,
+  BookOpen
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Profile = () => {
   const { user: authUser } = useAuth();
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  
   const user = {
     name: authUser?.fullName || "User",
     email: authUser?.email || "—",
     phone: authUser?.phone || "—",
+    rollNumber: authUser?.rollNumber || "—",
     role: authUser?.role || "Student",
+    dateOfBirth: authUser?.dateOfBirth || "—",
+    yearOfStudy: authUser?.yearOfStudy || "—",
+    branch: authUser?.branch || "—",
     joinDate: new Date().toISOString(),
     avatar: authUser?.fullName
       ? authUser.fullName.split(' ').map(p => p[0]).join('').slice(0,2).toUpperCase()
-      : "U"
+      : "U",
+    profilePhotoUrl: authUser?.profilePhotoUrl
   };
 
   // Mock order history
@@ -98,9 +110,12 @@ const Profile = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
-            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm">
-              {user.avatar}
-            </div>
+            <Avatar className="w-24 h-24 border-4 border-white/20">
+              <AvatarImage src={user.profilePhotoUrl} />
+              <AvatarFallback className="text-2xl font-bold bg-white/20 backdrop-blur-sm">
+                {user.avatar}
+              </AvatarFallback>
+            </Avatar>
             
             {/* User Info */}
             <div className="text-center md:text-left">
@@ -114,6 +129,10 @@ const Profile = () => {
                   <Phone className="w-4 h-4 mr-2" />
                   {user.phone}
                 </div>
+                <div className="flex items-center">
+                  <User className="w-4 h-4 mr-2" />
+                  {user.rollNumber}
+                </div>
                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                   {user.role}
                 </Badge>
@@ -122,7 +141,11 @@ const Profile = () => {
 
             {/* Actions */}
             <div className="ml-auto">
-              <Button variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+              <Button 
+                variant="secondary" 
+                className="bg-white/20 text-white border-white/30 hover:bg-white/30"
+                onClick={() => setShowEditProfile(true)}
+              >
                 <Settings className="w-4 h-4 mr-2" />
                 Edit Profile
               </Button>
@@ -149,6 +172,30 @@ const Profile = () => {
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-2" />
                     {new Date(user.joinDate).toLocaleDateString()}
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Roll Number</span>
+                  <div className="flex items-center font-semibold text-primary">
+                    <User className="w-4 h-4 mr-2" />
+                    {user.rollNumber}
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Year of Study</span>
+                  <div className="flex items-center font-semibold text-secondary">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    {user.yearOfStudy !== "—" ? `${user.yearOfStudy}${user.yearOfStudy === "1" ? "st" : user.yearOfStudy === "2" ? "nd" : user.yearOfStudy === "3" ? "rd" : "th"} Year` : "—"}
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Branch</span>
+                  <div className="flex items-center font-semibold text-accent-foreground">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    {user.branch}
                   </div>
                 </div>
                 
@@ -287,6 +334,11 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      
+      {/* Profile Edit Modal */}
+      {showEditProfile && (
+        <ProfileEdit onClose={() => setShowEditProfile(false)} />
+      )}
     </div>
   );
 };

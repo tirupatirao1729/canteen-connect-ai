@@ -30,7 +30,7 @@ const Login = () => {
   
   // Form states
   const [loginData, setLoginData] = useState({
-    email: '',
+    identifier: '', // Can be email or roll number
     password: '',
     adminCode: ''
   });
@@ -38,7 +38,11 @@ const Login = () => {
   const [registerData, setRegisterData] = useState({
     fullName: '',
     email: '',
+    rollNumber: '',
     phone: '',
+    dateOfBirth: '',
+    yearOfStudy: '1',
+    branch: '',
     password: '',
     confirmPassword: '',
     role: 'Student'
@@ -47,7 +51,17 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const result = await login(loginData.email, loginData.password);
+    // Check if admin access code is provided for admin login
+    if (isAdmin && loginData.adminCode !== 'ADMIN2024') {
+      toast({
+        title: "Invalid Admin Code",
+        description: "Please enter the correct admin access code.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const result = await login(loginData.identifier, loginData.password, isAdmin ? loginData.adminCode : undefined);
     
     if (result.success) {
       toast({
@@ -58,7 +72,7 @@ const Login = () => {
     } else {
       toast({
         title: "Login Failed",
-        description: "Please check your credentials and try again.",
+        description: result.error || "Please check your credentials and try again.",
         variant: "destructive",
       });
     }
@@ -87,10 +101,24 @@ const Login = () => {
       return;
     }
     
+    // Validate roll number format (alphanumeric, 6-12 characters)
+    if (!/^[A-Za-z0-9]{6,12}$/.test(registerData.rollNumber)) {
+      toast({
+        title: "Invalid Roll Number",
+        description: "Roll number must be 6-12 alphanumeric characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const result = await register({
       fullName: registerData.fullName,
       email: registerData.email,
+      rollNumber: registerData.rollNumber,
       phone: registerData.phone,
+      dateOfBirth: registerData.dateOfBirth,
+      yearOfStudy: parseInt(registerData.yearOfStudy),
+      branch: registerData.branch,
       password: registerData.password,
       role: registerData.role as 'Student' | 'Teacher'
     });
@@ -160,16 +188,15 @@ const Login = () => {
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="identifier">Email or Roll Number</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
+                        id="identifier"
+                        placeholder="Enter email or roll number"
                         className="pl-10"
-                        value={loginData.email}
-                        onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                        value={loginData.identifier}
+                        onChange={(e) => setLoginData({...loginData, identifier: e.target.value})}
                         required
                       />
                     </div>
@@ -287,6 +314,22 @@ const Login = () => {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="rollNumber">Roll Number</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="rollNumber"
+                        placeholder="Enter your roll number"
+                        className="pl-10"
+                        value={registerData.rollNumber}
+                        onChange={(e) => setRegisterData({...registerData, rollNumber: e.target.value.toUpperCase()})}
+                        required
+                        pattern="[A-Za-z0-9]{6,12}"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -303,11 +346,49 @@ const Login = () => {
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                      <Input
+                        id="dateOfBirth"
+                        type="date"
+                        value={registerData.dateOfBirth}
+                        onChange={(e) => setRegisterData({...registerData, dateOfBirth: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="yearOfStudy">Year of Study</Label>
+                      <select
+                        id="yearOfStudy"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={registerData.yearOfStudy}
+                        onChange={(e) => setRegisterData({...registerData, yearOfStudy: e.target.value})}
+                      >
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="branch">Branch/Department</Label>
+                    <Input
+                      id="branch"
+                      placeholder="e.g., Computer Science, Electrical, etc."
+                      value={registerData.branch}
+                      onChange={(e) => setRegisterData({...registerData, branch: e.target.value})}
+                      required
+                    />
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="role">Role</Label>
                     <select
                       id="role"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                       value={registerData.role}
                       onChange={(e) => setRegisterData({...registerData, role: e.target.value})}
                     >
