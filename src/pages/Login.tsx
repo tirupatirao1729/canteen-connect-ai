@@ -1,36 +1,20 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Eye, 
-  EyeOff, 
-  Mail, 
-  Lock, 
-  User, 
-  Phone, 
-  UserCheck,
-  UserPlus,
-  UtensilsCrossed
-} from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone, Calendar, GraduationCap, BookOpen, Shield, UserPlus } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import OTPModal from '@/components/OTPModal';
+import AdminSignup from '@/components/AdminSignup';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { login, register, loginAsGuest, loading } = useAuth();
-  const { toast } = useToast();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showAdminCode, setShowAdminCode] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  // Form states
   const [loginData, setLoginData] = useState({
-    identifier: '', // Can be email or roll number
+    identifier: '',
     password: '',
     adminCode: ''
   });
@@ -41,150 +25,165 @@ const Login = () => {
     rollNumber: '',
     phone: '',
     dateOfBirth: '',
-    yearOfStudy: '1',
+    yearOfStudy: 1,
     branch: '',
     password: '',
     confirmPassword: '',
-    role: 'Student'
+    role: 'Student' as 'Student' | 'Teacher'
   });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showOTP, setShowOTP] = useState(false);
+  const [showAdminSignup, setShowAdminSignup] = useState(false);
+  const [otpData, setOtpData] = useState({ contact: '', type: 'email' as 'email' | 'phone', purpose: 'login' as any });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const { login, register, loginAsGuest, resetPassword } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     
-    // Check if admin access code is provided for admin login
-    if (isAdmin && loginData.adminCode !== 'ADMIN2024') {
+    try {
+      const result = await login(loginData.identifier, loginData.password, loginData.adminCode);
+      
+      if (result.success) {
+        toast({
+          title: "Login Successful",
+          description: "Welcome back!",
+        });
+        navigate('/home');
+      } else {
+        toast({
+          title: "Login Failed", 
+          description: result.error || "Please check your credentials",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
-        title: "Invalid Admin Code",
-        description: "Please enter the correct admin access code.",
-        variant: "destructive",
+        title: "Login Error",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    toast({
+      title: "Guest Mode",
+      description: "You can browse the menu as a guest",
+    });
+    navigate('/menu');
+  };
+
+  const handleForgotPassword = async () => {
+    if (!loginData.identifier || !loginData.identifier.includes('@')) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to reset password",
+        variant: "destructive"
       });
       return;
     }
-    
-    const result = await login(loginData.identifier, loginData.password, isAdmin ? loginData.adminCode : undefined);
-    
-    if (result.success) {
+
+    setLoading(true);
+    try {
+      const result = await resetPassword(loginData.identifier);
+      if (result.success) {
+        setOtpData({ contact: loginData.identifier, type: 'email', purpose: 'forgot-password' });
+        setShowOTP(true);
+      } else {
+        toast({
+          title: "Reset Failed",
+          description: result.error || "Failed to send reset email",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
       toast({
-        title: "Login Successful",
-        description: "Welcome back!",
+        title: "Reset Error",
+        description: "An unexpected error occurred",
+        variant: "destructive"
       });
-      navigate(isAdmin ? '/admin' : '/menu');
-    } else {
-      toast({
-        title: "Login Failed",
-        description: result.error || "Please check your credentials and try again.",
-        variant: "destructive",
-      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate password match
     if (registerData.password !== registerData.confirmPassword) {
       toast({
         title: "Password Mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
+        description: "Passwords do not match",
+        variant: "destructive"
       });
       return;
     }
     
-    // Validate phone number
-    if (!/^\d{10}$/.test(registerData.phone)) {
+    setLoading(true);
+    
+    try {
+      const result = await register(registerData);
+      
+      if (result.success) {
+        setOtpData({ contact: registerData.email, type: 'email', purpose: 'registration' });
+        setShowOTP(true);
+        toast({
+          title: "Registration Successful",
+          description: "Please verify your email to complete registration",
+        });
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: result.error || "Please try again",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
       toast({
-        title: "Invalid Phone Number",
-        description: "Please enter a valid 10-digit phone number.",
-        variant: "destructive",
+        title: "Registration Error",
+        description: "An unexpected error occurred",
+        variant: "destructive"
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-    
-    // Validate roll number format (alphanumeric, 6-12 characters)
-    if (!/^[A-Za-z0-9]{6,12}$/.test(registerData.rollNumber)) {
-      toast({
-        title: "Invalid Roll Number",
-        description: "Roll number must be 6-12 alphanumeric characters.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = await register({
-      fullName: registerData.fullName,
-      email: registerData.email,
-      rollNumber: registerData.rollNumber,
-      phone: registerData.phone,
-      dateOfBirth: registerData.dateOfBirth,
-      yearOfStudy: parseInt(registerData.yearOfStudy),
-      branch: registerData.branch,
-      password: registerData.password,
-      role: registerData.role as 'Student' | 'Teacher'
-    });
-    
-    if (result.success) {
-      toast({
-        title: "Account Created",
-        description: "Welcome to Canteen Connect!",
-      });
-      navigate('/menu');
-    } else {
-      toast({
-        title: "Registration Failed",
-        description: result.error || "Please try again with different details.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleGuestContinue = () => {
-    loginAsGuest();
-    toast({
-      title: "Welcome, Guest!",
-      description: "You can browse the menu with limited features.",
-    });
-    
-    // Navigate to menu page as guest
-    navigate('/menu');
   };
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-            <UtensilsCrossed className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold bg-gradient-warm bg-clip-text text-transparent">
-            Canteen Connect
-          </h1>
-          <p className="text-muted-foreground">Welcome back to delicious meals!</p>
+          <h1 className="text-3xl font-bold text-primary mb-2">Canteen Connect</h1>
+          <p className="text-muted-foreground">Welcome to your campus food experience</p>
         </div>
 
-        <Card className="shadow-lg border-0 bg-card/95 backdrop-blur-sm">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-center">Access Your Account</CardTitle>
-            <CardDescription className="text-center">
-              Login to your account or create a new one
-            </CardDescription>
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle>Access Your Account</CardTitle>
           </CardHeader>
           
           <CardContent>
             <Tabs defaultValue="login" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="flex items-center space-x-2">
-                  <UserCheck className="w-4 h-4" />
-                  <span>Login</span>
-                </TabsTrigger>
-                <TabsTrigger value="register" className="flex items-center space-x-2">
-                  <UserPlus className="w-4 h-4" />
-                  <span>Sign Up</span>
-                </TabsTrigger>
-              </TabsList>
+              <div className="grid w-full grid-cols-2">
+                <Button variant="ghost" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+                  Login
+                </Button>
+                <Button variant="ghost" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+                  Sign Up
+                </Button>
+              </div>
 
-              {/* Login Tab */}
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
@@ -222,64 +221,51 @@ const Login = () => {
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        )}
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
 
-                  {/* Admin Access Toggle */}
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="admin-access"
-                      checked={isAdmin}
-                      onChange={(e) => {
-                        setIsAdmin(e.target.checked);
-                        setShowAdminCode(e.target.checked);
-                      }}
-                      className="rounded border-border"
+                  <div className="space-y-2">
+                    <Label htmlFor="adminCode">Admin Code (Optional)</Label>
+                    <Input
+                      id="adminCode"
+                      type="password"
+                      placeholder="Enter admin code if applicable"
+                      value={loginData.adminCode}
+                      onChange={(e) => setLoginData({...loginData, adminCode: e.target.value})}
                     />
-                    <Label htmlFor="admin-access" className="text-sm">
-                      Admin Access
-                    </Label>
                   </div>
-
-                  {/* Admin Code Field */}
-                  {showAdminCode && (
-                    <div className="space-y-2 animate-slide-up">
-                      <Label htmlFor="adminCode">Admin Access Code</Label>
-                      <Input
-                        id="adminCode"
-                        type="password"
-                        placeholder="Enter admin code"
-                        value={loginData.adminCode}
-                        onChange={(e) => setLoginData({...loginData, adminCode: e.target.value})}
-                        required={isAdmin}
-                      />
-                    </div>
-                  )}
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce"
+                    className="w-full"
                     disabled={loading}
                   >
                     {loading ? 'Signing In...' : 'Sign In'}
                   </Button>
 
-                  <div className="text-center">
-                    <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                      Forgot your password?
-                    </Link>
+                  <div className="space-y-2 mt-4">
+                    <Button 
+                      variant="ghost" 
+                      className="w-full"
+                      onClick={handleGuestLogin}
+                    >
+                      Continue as Guest
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="w-full text-xs"
+                      onClick={handleForgotPassword}
+                      disabled={loading}
+                    >
+                      Forgot Password?
+                    </Button>
                   </div>
                 </form>
               </TabsContent>
 
-              {/* Register Tab */}
               <TabsContent value="register" className="space-y-4">
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="space-y-2">
@@ -298,11 +284,11 @@ const Login = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="regEmail">Email</Label>
+                    <Label htmlFor="email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        id="regEmail"
+                        id="email"
                         type="email"
                         placeholder="Enter your email"
                         className="pl-10"
@@ -316,15 +302,14 @@ const Login = () => {
                   <div className="space-y-2">
                     <Label htmlFor="rollNumber">Roll Number</Label>
                     <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <BookOpen className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="rollNumber"
                         placeholder="Enter your roll number"
                         className="pl-10"
                         value={registerData.rollNumber}
-                        onChange={(e) => setRegisterData({...registerData, rollNumber: e.target.value.toUpperCase()})}
+                        onChange={(e) => setRegisterData({...registerData, rollNumber: e.target.value})}
                         required
-                        pattern="[A-Za-z0-9]{6,12}"
                       />
                     </div>
                   </div>
@@ -336,72 +321,86 @@ const Login = () => {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="Enter 10-digit phone number"
+                        placeholder="Enter your phone number"
                         className="pl-10"
                         value={registerData.phone}
                         onChange={(e) => setRegisterData({...registerData, phone: e.target.value})}
                         required
-                        pattern="[0-9]{10}"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="dateOfBirth"
                         type="date"
+                        className="pl-10"
                         value={registerData.dateOfBirth}
                         onChange={(e) => setRegisterData({...registerData, dateOfBirth: e.target.value})}
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="yearOfStudy">Year of Study</Label>
-                      <select
-                        id="yearOfStudy"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                        value={registerData.yearOfStudy}
-                        onChange={(e) => setRegisterData({...registerData, yearOfStudy: e.target.value})}
+                      <Select 
+                        value={registerData.yearOfStudy.toString()} 
+                        onValueChange={(value) => setRegisterData({...registerData, yearOfStudy: parseInt(value)})}
                       >
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
-                      </select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1st Year</SelectItem>
+                          <SelectItem value="2">2nd Year</SelectItem>
+                          <SelectItem value="3">3rd Year</SelectItem>
+                          <SelectItem value="4">4th Year</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="role">Role</Label>
+                      <Select 
+                        value={registerData.role} 
+                        onValueChange={(value) => setRegisterData({...registerData, role: value as 'Student' | 'Teacher'})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Student">Student</SelectItem>
+                          <SelectItem value="Teacher">Teacher</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="branch">Branch/Department</Label>
-                    <Input
-                      id="branch"
-                      placeholder="e.g., Computer Science, Electrical, etc."
-                      value={registerData.branch}
-                      onChange={(e) => setRegisterData({...registerData, branch: e.target.value})}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <select
-                      id="role"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      value={registerData.role}
-                      onChange={(e) => setRegisterData({...registerData, role: e.target.value})}
-                    >
-                      <option value="Student">Student</option>
-                      <option value="Teacher">Teacher</option>
-                    </select>
+                    <div className="relative">
+                      <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="branch"
+                        placeholder="e.g., Computer Science"
+                        className="pl-10"
+                        value={registerData.branch}
+                        onChange={(e) => setRegisterData({...registerData, branch: e.target.value})}
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="regPassword">Password</Label>
+                      <Label htmlFor="password">Password</Label>
                       <Input
-                        id="regPassword"
+                        id="password"
                         type="password"
                         placeholder="Create password"
                         value={registerData.password}
@@ -410,7 +409,7 @@ const Login = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm</Label>
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
                       <Input
                         id="confirmPassword"
                         type="password"
@@ -422,42 +421,58 @@ const Login = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-secondary hover:bg-secondary-hover btn-bounce"
-                    disabled={loading}
-                  >
+                  <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? 'Creating Account...' : 'Create Account'}
+                  </Button>
+                  
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    className="w-full mt-2"
+                    onClick={() => setShowAdminSignup(true)}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Register as Admin
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
-
-            {/* Guest Access */}
-            <div className="mt-6 pt-6 border-t border-border">
-              <div className="text-center space-y-3">
-                <p className="text-sm text-muted-foreground">Don't want to sign up?</p>
-                <Button 
-                  variant="outline" 
-                  className="w-full hover:bg-accent" 
-                  onClick={handleGuestContinue}
-                >
-                  Continue as Guest
-                </Button>
-                
-                <Badge variant="secondary" className="mt-2">
-                  Limited features available for guests
-                </Badge>
-              </div>
-            </div>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <div className="text-center mt-6 text-sm text-muted-foreground">
-          <p>By signing in, you agree to our Terms of Service and Privacy Policy</p>
-        </div>
       </div>
+
+      <OTPModal
+        isOpen={showOTP}
+        onClose={() => setShowOTP(false)}
+        onSuccess={() => {
+          setShowOTP(false);
+          if (otpData.purpose === 'registration') {
+            toast({
+              title: "Email Verified",
+              description: "You can now login with your credentials",
+            });
+          } else if (otpData.purpose === 'forgot-password') {
+            toast({
+              title: "Password Reset",
+              description: "Please check your email for reset instructions",
+            });
+          }
+        }}
+        contact={otpData.contact}
+        type={otpData.type}
+        purpose={otpData.purpose}
+      />
+
+      <AdminSignup
+        isOpen={showAdminSignup}
+        onClose={() => setShowAdminSignup(false)}
+        onSuccess={() => {
+          toast({
+            title: "Admin Account Created",
+            description: "Please verify your email to complete setup",
+          });
+        }}
+      />
     </div>
   );
 };

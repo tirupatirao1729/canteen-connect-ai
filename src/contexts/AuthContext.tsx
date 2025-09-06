@@ -37,7 +37,7 @@ interface RegisterData {
   yearOfStudy: number;
   branch: string;
   password: string;
-  role: 'Student' | 'Teacher';
+  role: 'Student' | 'Teacher' | 'Admin';
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
