@@ -175,14 +175,10 @@ const Login = () => {
           
           <CardContent>
             <Tabs defaultValue="login" className="space-y-4">
-              <div className="grid w-full grid-cols-2">
-                <Button variant="ghost" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
-                  Login
-                </Button>
-                <Button variant="ghost" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
-                  Sign Up
-                </Button>
-              </div>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="register">Sign Up</TabsTrigger>
+              </TabsList>
 
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -226,16 +222,19 @@ const Login = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="adminCode">Admin Code (Optional)</Label>
-                    <Input
-                      id="adminCode"
-                      type="password"
-                      placeholder="Enter admin code if applicable"
-                      value={loginData.adminCode}
-                      onChange={(e) => setLoginData({...loginData, adminCode: e.target.value})}
-                    />
-                  </div>
+                  {/* Only show admin code field if user enters admin-related credentials */}
+                  {(loginData.identifier.toLowerCase().includes('admin') || loginData.adminCode) && (
+                    <div className="space-y-2">
+                      <Label htmlFor="adminCode">Developer Access Code</Label>
+                      <Input
+                        id="adminCode"
+                        type="password"
+                        placeholder="Enter developer access code: codeSTD798143"
+                        value={loginData.adminCode}
+                        onChange={(e) => setLoginData({...loginData, adminCode: e.target.value})}
+                      />
+                    </div>
+                  )}
 
                   <Button 
                     type="submit" 

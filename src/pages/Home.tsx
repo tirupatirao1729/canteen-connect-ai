@@ -24,45 +24,8 @@ const Home = () => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  // Mock data for special items
-  const specialItems = [
-    {
-      id: 1,
-      name: "Masala Dosa",
-      category: "South Indian",
-      price: 45,
-      type: 'Veg' as const,
-      rating: 4.8,
-      prepTime: "15 min",
-      description: "Crispy dosa with spicy potato filling",
-      isSpecial: true,
-      image: masalaDosa
-    },
-    {
-      id: 2,
-      name: "Chicken Biryani",
-      category: "Main Course",
-      price: 120,
-      type: 'Non-Veg' as const,
-      rating: 4.9,
-      prepTime: "20 min",
-      description: "Aromatic basmati rice with tender chicken",
-      isSpecial: true,
-      image: chickenBiryani
-    },
-    {
-      id: 3,
-      name: "Veg Sandwich",
-      category: "Snacks",
-      price: 35,
-      type: 'Veg' as const,
-      rating: 4.6,
-      prepTime: "10 min",
-      description: "Fresh vegetables with mayo and chutney",
-      isSpecial: true,
-      image: "/placeholder.svg"
-    }
-  ];
+  // Remove mock data - use real menu items from Menu page instead
+  const specialItems: any[] = [];
 
   const handleAddToCart = (item: typeof specialItems[0]) => {
     addToCart(item);
@@ -159,69 +122,20 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Special Items Section */}
+      {/* Features Section */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4">
               <Zap className="w-4 h-4 mr-2" />
-              Today's Specials
+              Why Choose Us
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Most Popular Items
+              Fresh Food, Fast Service
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              These are our students' favorite dishes, prepared fresh daily with love and authentic flavors.
+              Experience the best canteen service with our easy ordering system and quality food.
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {specialItems.map((item) => (
-              <Card key={item.id} className="menu-card group">
-                <CardContent className="p-0">
-                  <div className="aspect-video bg-gradient-subtle rounded-t-xl mb-4 overflow-hidden">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold text-lg">{item.name}</h3>
-                      {item.type === 'Veg' && (
-                        <Badge variant="outline" className="text-success border-success">
-                          <Leaf className="w-3 h-3 mr-1" />
-                          Veg
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center text-warning">
-                          <Star className="w-4 h-4 fill-current mr-1" />
-                          <span className="text-sm font-medium">{item.rating}</span>
-                        </div>
-                        <div className="flex items-center text-muted-foreground">
-                          <Clock className="w-4 h-4 mr-1" />
-                          <span className="text-sm">{item.prepTime}</span>
-                        </div>
-                      </div>
-                      <span className="text-xl font-bold text-primary">₹{item.price}</span>
-                    </div>
-                    
-                    <Button 
-                      className="w-full bg-gradient-primary hover:bg-primary-hover btn-bounce"
-                      onClick={() => handleAddToCart(item)}
-                    >
-                      Add to Cart
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
           </div>
 
           <div className="text-center mt-12">
