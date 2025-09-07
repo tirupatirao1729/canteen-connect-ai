@@ -90,7 +90,7 @@ const Home = () => {
                     variant="outline" 
                     className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                   >
-                    Sign Up Today
+                    Login Account
                   </Button>
                 </Link>
               </div>

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { ShoppingCart, User, Mail, Phone } from 'lucide-react';
+import { ShoppingCart, User, Mail, Phone, CreditCard, Banknote } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import OTPModal from './OTPModal';
 import { supabase } from '@/integrations/supabase/client';
@@ -25,6 +25,7 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
     specialInstructions: ''
   });
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash');
   const [requireOTP, setRequireOTP] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -103,8 +104,8 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
         room_number: formData.roomNumber || null,
         special_instructions: formData.specialInstructions || null,
         status: 'pending',
-        payment_status: 'pending',
-        payment_method: 'cash',
+        payment_status: paymentMethod === 'cash' ? 'cash_on_delivery' : 'pending',
+        payment_method: paymentMethod,
         order_number: `GUEST-${Date.now()}`
       };
 
@@ -255,6 +256,30 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
               />
             </div>
 
+            <div className="space-y-3">
+              <Label>Payment Method *</Label>
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={(value) => setPaymentMethod(value as 'cash' | 'online')}
+                className="flex gap-6"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="cash" id="cash" />
+                  <Label htmlFor="cash" className="flex items-center gap-2">
+                    <Banknote className="w-4 h-4" />
+                    Cash on Delivery
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="online" id="online" />
+                  <Label htmlFor="online" className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" />
+                    Online Payment
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="requireOTP"
@@ -276,9 +301,15 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
                     <span>₹{item.price * item.quantity}</span>
                   </div>
                 ))}
-                <div className="border-t pt-2 flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>₹{total}</span>
+                <div className="border-t pt-2 space-y-1">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span>₹{total}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Payment</span>
+                    <span>{paymentMethod === 'cash' ? 'Cash on Delivery' : 'Online Payment'}</span>
+                  </div>
                 </div>
               </div>
             </div>
