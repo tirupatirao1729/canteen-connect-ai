@@ -78,9 +78,9 @@ const Login = () => {
     loginAsGuest();
     toast({
       title: "Guest Mode",
-      description: "You can browse the menu as a guest",
+      description: "You can browse as a guest",
     });
-    navigate('/menu');
+    navigate('/home');
   };
 
   const handleForgotPassword = async () => {

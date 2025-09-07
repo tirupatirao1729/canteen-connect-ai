@@ -13,7 +13,8 @@ import {
   Menu, 
   X,
   LogOut,
-  Shield
+  Shield,
+  ShoppingBag
 } from 'lucide-react';
 
 const Navigation = () => {
@@ -26,6 +27,7 @@ const Navigation = () => {
     { path: '/home', label: 'Home', icon: Home },
     { path: '/menu', label: 'Menu', icon: UtensilsCrossed },
     { path: '/reviews', label: 'Reviews', icon: Star },
+    ...(user || isGuest ? [{ path: '/orders', label: 'Orders', icon: ShoppingBag }] : []),
     ...(user && !isGuest ? [{ path: '/profile', label: 'Profile', icon: User }] : []),
     ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
   ];
