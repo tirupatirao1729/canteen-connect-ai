@@ -38,7 +38,7 @@ const Login = () => {
   const [showAdminSignup, setShowAdminSignup] = useState(false);
   const [otpData, setOtpData] = useState({ contact: '', type: 'email' as 'email' | 'phone', purpose: 'login' as any });
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const { login, register, loginAsGuest, resetPassword } = useAuth();
+  const { login, register, resetPassword } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,14 +74,6 @@ const Login = () => {
     }
   };
 
-  const handleGuestLogin = () => {
-    loginAsGuest();
-    toast({
-      title: "Guest Mode",
-      description: "You can browse as a guest",
-    });
-    navigate('/home');
-  };
 
   const handleForgotPassword = async () => {
     if (!loginData.identifier || !loginData.identifier.includes('@')) {
@@ -245,13 +237,6 @@ const Login = () => {
                   </Button>
 
                   <div className="space-y-2 mt-4">
-                    <Button 
-                      variant="ghost" 
-                      className="w-full"
-                      onClick={handleGuestLogin}
-                    >
-                      Continue as Guest
-                    </Button>
                     <Button 
                       variant="ghost" 
                       size="sm"
