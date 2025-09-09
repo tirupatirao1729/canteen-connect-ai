@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ArrowRight, 
   Clock, 
@@ -23,6 +24,7 @@ import masalaDosa from '@/assets/masala-dosa.jpg';
 const Home = () => {
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   // Remove mock data - use real menu items from Menu page instead
   const specialItems: any[] = [];
@@ -60,7 +62,7 @@ const Home = () => {
               <div className="flex justify-center mb-6">
                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Welcome to Canteen Connect
+                  Welcome back, {user?.fullName || 'Student'}!
                 </Badge>
               </div>
               
