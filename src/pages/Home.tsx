@@ -62,7 +62,7 @@ const Home = () => {
               <div className="flex justify-center mb-6">
                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Welcome back, {user?.fullName || 'Student'}!
+                  {user ? `Welcome back, ${user.fullName}!` : 'Welcome to Canteen Connect'}
                 </Badge>
               </div>
               
