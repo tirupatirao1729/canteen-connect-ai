@@ -236,17 +236,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Don't fail registration if profile creation fails
         }
 
-        // Send welcome email (this will work even if Supabase email is not configured)
-        try {
-          await emailService.sendWelcomeEmail({
-            email: userData.email,
-            fullName: userData.fullName,
-            role: userData.role,
-            rollNumber: userData.rollNumber
-          });
-        } catch (emailError) {
-          console.error('Welcome email failed:', emailError);
-          // Don't fail registration if email fails
+        // Send welcome email only if email confirmation is not required
+        if (!needsEmailConfirmation) {
+          try {
+            await emailService.sendWelcomeEmail({
+              email: userData.email,
+              fullName: userData.fullName,
+              role: userData.role,
+              rollNumber: userData.rollNumber
+            });
+          } catch (emailError) {
+            console.error('Welcome email failed:', emailError);
+            // Don't fail registration if email fails
+          }
         }
       }
 
