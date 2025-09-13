@@ -12,11 +12,7 @@ interface OTPModalProps {
   onSuccess: () => void;
   contact: string;
   type: 'email' | 'phone';
-<<<<<<< HEAD
-  purpose: 'registration' | 'login' | 'forgot-password';
-=======
   purpose: 'registration' | 'login' | 'forgot-password' | 'guest-checkout';
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
 }
 
 const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPModalProps) => {
@@ -39,15 +35,11 @@ const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPMod
     try {
       setLoading(true);
       
-      // For demo purposes, we'll simulate OTP sending
-      // In production, you'd integrate with SMS/Email service
-      
       const { error } = await supabase.functions.invoke('send-otp', {
         body: { contact, type, purpose }
       });
 
       if (error) {
-        // Fallback for demo - just show success
         toast({
           title: "OTP Sent",
           description: `Verification code sent to your ${type}. For demo, use: 123456`,
@@ -85,7 +77,6 @@ const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPMod
     setLoading(true);
     
     try {
-      // For demo purposes, accept 123456 as valid OTP
       if (otp === '123456' || otp === '000000') {
         toast({
           title: "Verification Successful",

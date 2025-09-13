@@ -7,11 +7,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-<<<<<<< HEAD
   const { user, isGuest, loading } = useAuth();
-=======
-  const { user, loading } = useAuth();
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
 
   if (loading) {
     return (
@@ -21,11 +17,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-<<<<<<< HEAD
   // Only allow registered users (not guests) for protected routes
-=======
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
-  if (!user) {
+  if (!user || isGuest) {
     return <Navigate to="/" replace />;
   }
 

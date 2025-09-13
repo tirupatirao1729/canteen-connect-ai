@@ -20,28 +20,6 @@ import {
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-<<<<<<< HEAD
-  const { user, isAdmin, logout } = useAuth();
-  const { getTotalItems } = useCart();
-
-  const navItems = [
-    { path: '/home', label: 'Home', icon: Home, requiresAuth: true },
-    { path: '/menu', label: 'Menu', icon: UtensilsCrossed, requiresAuth: true },
-    { path: '/reviews', label: 'Reviews', icon: Star, requiresAuth: true },
-    { path: '/cart', label: 'Cart', icon: ShoppingCart, requiresAuth: true },
-    ...(user ? [{ path: '/orders', label: 'Orders', icon: ShoppingBag, requiresAuth: true }] : []),
-    ...(user ? [{ path: '/profile', label: 'Profile', icon: User, requiresAuth: true }] : []),
-    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield, requiresAuth: true }] : []),
-  ].filter(item => !item.requiresAuth || user);
-
-  const isActivePath = (path: string) => location.pathname === path;
-
-  // Don't show navigation if user is not authenticated
-  if (!user) {
-    return null;
-  }
-
-=======
   const { user, isAdmin, isGuest, logout } = useAuth();
   const { getTotalItems } = useCart();
 
@@ -56,7 +34,9 @@ const Navigation = () => {
 
   const isActivePath = (path: string) => location.pathname === path;
 
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
+  // Don't show navigation if user is not authenticated
+  if (!user && !isGuest) return null;
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4">
@@ -109,17 +89,10 @@ const Navigation = () => {
               </Button>
             </Link>
             
-<<<<<<< HEAD
-            {user ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground hidden sm:block">
-                  {user ? `Hi, ${user.fullName.split(' ')[0]}` : 'User'}
-=======
             {user || isGuest ? (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   {user ? `Hi, ${user.fullName.split(' ')[0]}` : 'Guest'}
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
                 </span>
                 <Button 
                   size="sm" 

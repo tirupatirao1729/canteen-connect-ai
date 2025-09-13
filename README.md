@@ -10,11 +10,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-<<<<<<< HEAD
 Simply visit the [Lovable Project] and start prompting.
-=======
-Simply visit the [Lovable Project](https://lovable.dev/projects/118b59c6-14bf-41c1-a58a-7d9eb7c6327e) and start prompting.
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
 
 Changes made via Lovable will be committed automatically to this repo.
 
@@ -66,7 +62,6 @@ This project is built with:
 
 ## How can I deploy this project?
 
-<<<<<<< HEAD
 ### Live Deployment
 🌐 **Live Application**: [https://dazzling-sunflower-a353a2.netlify.app](https://dazzling-sunflower-a353a2.netlify.app)
 
@@ -86,10 +81,6 @@ Simply open [Lovable](https://lovable.dev/projects/118b59c6-14bf-41c1-a58a-7d9eb
 3. Build command: `npm run build`
 4. Publish directory: `dist`
 
-=======
-Simply open [Lovable](https://lovable.dev/projects/118b59c6-14bf-41c1-a58a-7d9eb7c6327e) and click on Share -> Publish.
-
->>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
