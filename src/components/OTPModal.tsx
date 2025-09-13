@@ -12,7 +12,11 @@ interface OTPModalProps {
   onSuccess: () => void;
   contact: string;
   type: 'email' | 'phone';
+<<<<<<< HEAD
   purpose: 'registration' | 'login' | 'forgot-password';
+=======
+  purpose: 'registration' | 'login' | 'forgot-password' | 'guest-checkout';
+>>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
 }
 
 const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPModalProps) => {

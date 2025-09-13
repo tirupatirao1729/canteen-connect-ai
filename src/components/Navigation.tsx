@@ -20,6 +20,7 @@ import {
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+<<<<<<< HEAD
   const { user, isAdmin, logout } = useAuth();
   const { getTotalItems } = useCart();
 
@@ -40,6 +41,22 @@ const Navigation = () => {
     return null;
   }
 
+=======
+  const { user, isAdmin, isGuest, logout } = useAuth();
+  const { getTotalItems } = useCart();
+
+  const navItems = [
+    { path: '/home', label: 'Home', icon: Home },
+    { path: '/menu', label: 'Menu', icon: UtensilsCrossed },
+    { path: '/reviews', label: 'Reviews', icon: Star },
+    ...(user || isGuest ? [{ path: '/orders', label: 'Orders', icon: ShoppingBag }] : []),
+    ...(user && !isGuest ? [{ path: '/profile', label: 'Profile', icon: User }] : []),
+    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
+  ];
+
+  const isActivePath = (path: string) => location.pathname === path;
+
+>>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4">
@@ -92,10 +109,17 @@ const Navigation = () => {
               </Button>
             </Link>
             
+<<<<<<< HEAD
             {user ? (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   {user ? `Hi, ${user.fullName.split(' ')[0]}` : 'User'}
+=======
+            {user || isGuest ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  {user ? `Hi, ${user.fullName.split(' ')[0]}` : 'Guest'}
+>>>>>>> 4cc023ed9c05ebda692af206c2e4fb0ab464d2f2
                 </span>
                 <Button 
                   size="sm" 
