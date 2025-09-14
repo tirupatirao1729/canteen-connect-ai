@@ -1,0 +1,301 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Canteen Connect Design System - Modern, vibrant college canteen theme */
+
+@layer base {
+  :root {
+    /* Core Background & Text */
+    --background: 0 0% 100%;
+    --foreground: 25 25% 15%;
+
+    /* Card System */
+    --card: 0 0% 100%;
+    --card-foreground: 25 25% 15%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 25% 15%;
+
+    /* Primary - Warm Orange Theme */
+    --primary: 25 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 25 100% 65%;
+    --primary-hover: 25 85% 50%;
+
+    /* Secondary - Fresh Green Theme */
+    --secondary: 145 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 145 70% 55%;
+    --secondary-hover: 145 55% 40%;
+
+    /* Neutral Tones */
+    --muted: 25 5% 96%;
+    --muted-foreground: 25 10% 40%;
+
+    /* Accent - Light Orange */
+    --accent: 25 100% 96%;
+    --accent-foreground: 25 25% 15%;
+
+    /* System Colors */
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 90% 55%;
+    --warning-foreground: 25 25% 15%;
+
+    /* Borders & Inputs */
+    --border: 25 15% 90%;
+    --input: 25 15% 90%;
+    --ring: 25 90% 55%;
+
+    /* Border Radius */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    --shadow-card-hover: 0 8px 30px -6px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+    --shadow-soft: 0 2px 15px -3px hsl(var(--foreground) / 0.1);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Sidebar (keeping for compatibility) */
+    --sidebar-background: hsl(var(--background));
+    --sidebar-foreground: hsl(var(--foreground));
+    --sidebar-primary: hsl(var(--primary));
+    --sidebar-primary-foreground: hsl(var(--primary-foreground));
+    --sidebar-accent: hsl(var(--accent));
+    --sidebar-accent-foreground: hsl(var(--accent-foreground));
+    --sidebar-border: hsl(var(--border));
+    --sidebar-ring: hsl(var(--ring));
+  }
+
+  .dark {
+    /* Core Background & Text - Dark Mode */
+    --background: 25 15% 8%;
+    --foreground: 25 5% 95%;
+
+    /* Card System - Dark Mode */
+    --card: 25 15% 10%;
+    --card-foreground: 25 5% 95%;
+
+    /* Popover - Dark Mode */
+    --popover: 25 15% 10%;
+    --popover-foreground: 25 5% 95%;
+
+    /* Primary - Maintains warmth in dark mode */
+    --primary: 25 85% 60%;
+    --primary-foreground: 25 15% 8%;
+    --primary-glow: 25 90% 70%;
+    --primary-hover: 25 80% 55%;
+
+    /* Secondary - Maintains freshness in dark mode */
+    --secondary: 145 55% 50%;
+    --secondary-foreground: 25 15% 8%;
+    --secondary-glow: 145 65% 60%;
+    --secondary-hover: 145 50% 45%;
+
+    /* Neutral Tones - Dark Mode */
+    --muted: 25 10% 15%;
+    --muted-foreground: 25 5% 65%;
+
+    /* Accent - Dark Mode */
+    --accent: 25 15% 15%;
+    --accent-foreground: 25 5% 95%;
+
+    /* System Colors - Dark Mode */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 25 5% 95%;
+    --success: 145 55% 50%;
+    --success-foreground: 25 5% 95%;
+    --warning: 45 85% 60%;
+    --warning-foreground: 25 15% 8%;
+
+    /* Borders & Inputs - Dark Mode */
+    --border: 25 10% 20%;
+    --input: 25 10% 20%;
+    --ring: 25 85% 60%;
+
+    /* Update sidebar for consistency */
+    --sidebar-background: hsl(var(--background));
+    --sidebar-foreground: hsl(var(--foreground));
+    --sidebar-primary: hsl(var(--primary));
+    --sidebar-primary-foreground: hsl(var(--primary-foreground));
+    --sidebar-accent: hsl(var(--accent));
+    --sidebar-accent-foreground: hsl(var(--accent-foreground));
+    --sidebar-border: hsl(var(--border));
+    --sidebar-ring: hsl(var(--ring));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Utility Classes for Canteen Connect */
+@layer components {
+  /* Card Effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1;
+  }
+
+  .card-glow {
+    @apply shadow-[var(--shadow-glow)];
+  }
+
+  /* Button Animations */
+  .btn-bounce {
+    @apply transition-transform duration-150 active:scale-95;
+  }
+
+  /* Menu Item Cards */
+  .menu-card {
+    @apply bg-card border border-border rounded-xl p-4 transition-all duration-300 
+           hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-2 hover:scale-[1.02]
+           cursor-pointer;
+  }
+
+  /* Gradient Backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .bg-gradient-warm {
+    background: var(--gradient-warm);
+  }
+
+  .bg-gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+
+  /* Hero Section */
+  .hero-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--primary-glow)) 50%, 
+      hsl(var(--secondary)) 100%);
+  }
+
+  /* Smooth Transitions */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-fast {
+    transition: var(--transition-fast);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Food Category Pills */
+  .category-pill {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-sm font-medium
+           bg-accent text-accent-foreground transition-all duration-200
+           hover:bg-primary hover:text-primary-foreground cursor-pointer;
+  }
+
+  /* Status Badges */
+  .status-pending {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+
+  .status-accepted {
+    @apply bg-success/10 text-success border border-success/20;
+  }
+
+  .status-completed {
+    @apply bg-secondary/10 text-secondary border border-secondary/20;
+  }
+
+  .status-rejected {
+    @apply bg-destructive/10 text-destructive border border-destructive/20;
+  }
+
+  /* Animations & Effects */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.6);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
