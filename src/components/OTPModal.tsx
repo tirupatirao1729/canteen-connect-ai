@@ -35,15 +35,21 @@ const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPMod
     try {
       setLoading(true);
       
+<<<<<<< HEAD
       // For demo purposes, we'll simulate OTP sending
       // In production, you'd integrate with SMS/Email service
       
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       const { error } = await supabase.functions.invoke('send-otp', {
         body: { contact, type, purpose }
       });
 
       if (error) {
+<<<<<<< HEAD
         // Fallback for demo - just show success
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         toast({
           title: "OTP Sent",
           description: `Verification code sent to your ${type}. For demo, use: 123456`,
@@ -81,7 +87,10 @@ const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPMod
     setLoading(true);
     
     try {
+<<<<<<< HEAD
       // For demo purposes, accept 123456 as valid OTP
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       if (otp === '123456' || otp === '000000') {
         toast({
           title: "Verification Successful",
@@ -182,4 +191,8 @@ const OTPModal = ({ isOpen, onClose, onSuccess, contact, type, purpose }: OTPMod
   );
 };
 
+<<<<<<< HEAD
 export default OTPModal;
+=======
+export default OTPModal;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d

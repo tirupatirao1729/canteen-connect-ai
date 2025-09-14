@@ -21,6 +21,7 @@ import {
   Plus,
   Edit,
   Trash2,
+<<<<<<< HEAD
   Eye,
   Upload,
   RefreshCw,
@@ -34,17 +35,57 @@ import { Order, MENU_ITEMS } from '@/data/mockData';
 import { MenuItem } from '@/contexts/CartContext';
 import { orderService, Order as OrderType } from '@/services/orderService';
 import { userService, UserWithAuth } from '@/services/userService';
+=======
+  Eye
+} from 'lucide-react';
+import { Order, MENU_ITEMS } from '@/data/mockData';
+import { MenuItem } from '@/contexts/CartContext';
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
 const Admin = () => {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   
+<<<<<<< HEAD
   // Real data from database
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [users, setUsers] = useState<UserWithAuth[]>([]);
   const [loading, setLoading] = useState(true);
   const [usersLoading, setUsersLoading] = useState(false);
+=======
+  // Mock data for testing
+  const [orders, setOrders] = useState<Order[]>([
+    {
+      id: 'ORD001',
+      userId: '1',
+      items: [
+        { id: 1, name: 'Masala Dosa', price: 45, quantity: 2 },
+        { id: 4, name: 'Masala Chai', price: 15, quantity: 1 }
+      ],
+      status: 'Pending',
+      totalAmount: 105,
+      roomNumber: 'Room 204',
+      contactNumber: '9876543210',
+      paymentMethod: 'UPI',
+      createdAt: new Date(),
+      isGuestOrder: false
+    },
+    {
+      id: 'ORD002',
+      items: [
+        { id: 2, name: 'Chicken Biryani', price: 120, quantity: 1 }
+      ],
+      status: 'Accepted',
+      totalAmount: 120,
+      roomNumber: 'Faculty Room 101',
+      contactNumber: '9876543211',
+      paymentMethod: 'Cash',
+      createdAt: new Date(),
+      isGuestOrder: true
+    }
+  ]);
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(MENU_ITEMS);
   const [newItem, setNewItem] = useState({
@@ -57,10 +98,14 @@ const Admin = () => {
     isSpecial: false
   });
 
+<<<<<<< HEAD
   const [menuPhoto, setMenuPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>('');
 
   // Check admin access and fetch data
+=======
+  // Check admin access
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   useEffect(() => {
     if (!user || !isAdmin) {
       toast({
@@ -69,6 +114,7 @@ const Admin = () => {
         variant: "destructive",
       });
       navigate('/login');
+<<<<<<< HEAD
       return;
     }
 
@@ -230,6 +276,36 @@ const Admin = () => {
   };
 
   const addMenuItem = async () => {
+=======
+    }
+  }, [user, isAdmin, navigate, toast]);
+
+  const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, status: newStatus } : order
+    ));
+    
+    toast({
+      title: "Order Updated",
+      description: `Order ${orderId} status changed to ${newStatus}`,
+    });
+  };
+
+  const acceptAllPendingOrders = () => {
+    const pendingCount = orders.filter(order => order.status === 'Pending').length;
+    
+    setOrders(prev => prev.map(order => 
+      order.status === 'Pending' ? { ...order, status: 'Accepted' } : order
+    ));
+    
+    toast({
+      title: "Orders Accepted",
+      description: `${pendingCount} pending orders have been accepted.`,
+    });
+  };
+
+  const addMenuItem = () => {
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     if (!newItem.name || !newItem.price || !newItem.description) {
       toast({
         title: "Missing Information",
@@ -239,9 +315,12 @@ const Admin = () => {
       return;
     }
 
+<<<<<<< HEAD
     // Upload photo if selected
     const imageUrl = await uploadMenuPhoto();
 
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     const item: MenuItem = {
       id: Date.now(),
       name: newItem.name,
@@ -252,7 +331,11 @@ const Admin = () => {
       prepTime: newItem.prepTime || '15 min',
       description: newItem.description,
       isSpecial: newItem.isSpecial,
+<<<<<<< HEAD
       image: imageUrl
+=======
+      image: '/placeholder.svg'
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     };
 
     setMenuItems(prev => [...prev, item]);
@@ -265,8 +348,11 @@ const Admin = () => {
       prepTime: '',
       isSpecial: false
     });
+<<<<<<< HEAD
     setMenuPhoto(null);
     setPhotoPreview('');
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
     toast({
       title: "Item Added",
@@ -282,6 +368,7 @@ const Admin = () => {
     });
   };
 
+<<<<<<< HEAD
   // User management functions
   const updateUserRole = async (userId: string, newRole: 'Student' | 'Teacher' | 'Admin') => {
     try {
@@ -345,16 +432,33 @@ const Admin = () => {
       case 'accepted': return <CheckCircle className="w-4 h-4" />;
       case 'completed': return <CheckCircle className="w-4 h-4" />;
       case 'cancelled': return <XCircle className="w-4 h-4" />;
+=======
+  const getStatusIcon = (status: Order['status']) => {
+    switch (status) {
+      case 'Pending': return <Clock className="w-4 h-4" />;
+      case 'Accepted': return <CheckCircle className="w-4 h-4" />;
+      case 'Completed': return <CheckCircle className="w-4 h-4" />;
+      case 'Rejected': return <XCircle className="w-4 h-4" />;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       default: return <Clock className="w-4 h-4" />;
     }
   };
 
+<<<<<<< HEAD
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'status-pending';
       case 'accepted': return 'status-accepted';
       case 'completed': return 'status-completed';
       case 'cancelled': return 'status-rejected';
+=======
+  const getStatusColor = (status: Order['status']) => {
+    switch (status) {
+      case 'Pending': return 'status-pending';
+      case 'Accepted': return 'status-accepted';
+      case 'Completed': return 'status-completed';
+      case 'Rejected': return 'status-rejected';
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       default: return 'status-pending';
     }
   };
@@ -386,7 +490,11 @@ const Admin = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Total Orders</p>
+<<<<<<< HEAD
                   <p className="text-2xl font-bold">{loading ? '...' : orders.length}</p>
+=======
+                  <p className="text-2xl font-bold">{orders.length}</p>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 </div>
                 <Package className="w-8 h-8 text-primary" />
               </div>
@@ -399,7 +507,11 @@ const Admin = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Pending</p>
                   <p className="text-2xl font-bold text-warning">
+<<<<<<< HEAD
                     {loading ? '...' : orders.filter(o => o.status === 'pending').length}
+=======
+                    {orders.filter(o => o.status === 'Pending').length}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </p>
                 </div>
                 <Clock className="w-8 h-8 text-warning" />
@@ -411,10 +523,17 @@ const Admin = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
+<<<<<<< HEAD
                   <p className="text-sm text-muted-foreground">Total Users</p>
                   <p className="text-2xl font-bold">{usersLoading ? '...' : users.length}</p>
                 </div>
                 <Users className="w-8 h-8 text-secondary" />
+=======
+                  <p className="text-sm text-muted-foreground">Menu Items</p>
+                  <p className="text-2xl font-bold">{menuItems.length}</p>
+                </div>
+                <Package className="w-8 h-8 text-secondary" />
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
               </div>
             </CardContent>
           </Card>
@@ -424,12 +543,16 @@ const Admin = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Revenue</p>
+<<<<<<< HEAD
                   <p className="text-2xl font-bold">
                     {loading ? '...' : `₹${orders
                       .filter(o => o.status === 'completed')
                       .reduce((sum, o) => sum + Number(o.total_amount), 0)
                     }`}
                   </p>
+=======
+                  <p className="text-2xl font-bold">₹{orders.reduce((sum, o) => sum + o.totalAmount, 0)}</p>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 </div>
                 <TrendingUp className="w-8 h-8 text-success" />
               </div>
@@ -454,13 +577,18 @@ const Admin = () => {
                   <Button 
                     onClick={acceptAllPendingOrders}
                     className="bg-gradient-secondary"
+<<<<<<< HEAD
                     disabled={!orders.some(o => o.status === 'pending')}
+=======
+                    disabled={!orders.some(o => o.status === 'Pending')}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   >
                     Accept All Pending
                   </Button>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
+<<<<<<< HEAD
                 {loading ? (
                   <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -485,22 +613,45 @@ const Admin = () => {
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {new Date(order.placed_at).toLocaleString()}
+=======
+                {orders.map((order) => (
+                  <div key={order.id} className="border border-border rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold">Order #{order.id}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {`User ID: ${order.userId}`}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {order.roomNumber} • {order.contactNumber}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                         </p>
                       </div>
                       <div className="text-right">
                         <Badge className={getStatusColor(order.status)}>
                           {getStatusIcon(order.status)}
+<<<<<<< HEAD
                             <span className="ml-1 capitalize">{order.status}</span>
                         </Badge>
                         <p className="text-sm text-muted-foreground mt-1">
                             {order.payment_status || 'pending'}
+=======
+                          <span className="ml-1">{order.status}</span>
+                        </Badge>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {order.paymentMethod}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                         </p>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <h5 className="font-medium">Items:</h5>
+<<<<<<< HEAD
                         {(order.items as any[]).map((item, index) => (
+=======
+                      {order.items.map((item, index) => (
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                         <div key={index} className="flex justify-between text-sm">
                           <span>{item.name} × {item.quantity}</span>
                           <span>₹{item.price * item.quantity}</span>
@@ -508,6 +659,7 @@ const Admin = () => {
                       ))}
                       <div className="flex justify-between font-semibold border-t pt-2">
                         <span>Total</span>
+<<<<<<< HEAD
                           <span>₹{order.total_amount}</span>
                         </div>
                       </div>
@@ -517,20 +669,35 @@ const Admin = () => {
                           <strong>Special Instructions:</strong> {order.special_instructions}
                     </div>
                       )}
+=======
+                        <span>₹{order.totalAmount}</span>
+                      </div>
+                    </div>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
                     <div className="flex space-x-2 mt-4">
                       <Button
                         size="sm"
+<<<<<<< HEAD
                           onClick={() => updateOrderStatus(order.id, 'accepted')}
                           disabled={order.status !== 'pending'}
+=======
+                        onClick={() => updateOrderStatus(order.id, 'Accepted')}
+                        disabled={order.status !== 'Pending'}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                         className="bg-success hover:bg-success-hover"
                       >
                         Accept
                       </Button>
                       <Button
                         size="sm"
+<<<<<<< HEAD
                           onClick={() => updateOrderStatus(order.id, 'completed')}
                           disabled={order.status !== 'accepted'}
+=======
+                        onClick={() => updateOrderStatus(order.id, 'Completed')}
+                        disabled={order.status !== 'Accepted'}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                         className="bg-secondary hover:bg-secondary-hover"
                       >
                         Complete
@@ -538,6 +705,7 @@ const Admin = () => {
                       <Button
                         size="sm"
                         variant="destructive"
+<<<<<<< HEAD
                           onClick={() => updateOrderStatus(order.id, 'cancelled')}
                           disabled={order.status === 'completed'}
                       >
@@ -547,6 +715,16 @@ const Admin = () => {
                   </div>
                   ))
                 )}
+=======
+                        onClick={() => updateOrderStatus(order.id, 'Rejected')}
+                        disabled={order.status === 'Completed'}
+                      >
+                        Reject
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
               </CardContent>
             </Card>
           </TabsContent>
@@ -641,6 +819,7 @@ const Admin = () => {
                   />
                 </div>
 
+<<<<<<< HEAD
                 {/* Photo Upload Section */}
                 <div className="space-y-4">
                   <Label>Menu Item Photo</Label>
@@ -684,6 +863,8 @@ const Admin = () => {
                   </div>
                 </div>
 
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 <Button onClick={addMenuItem} className="w-full bg-gradient-primary">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Menu Item
@@ -699,6 +880,7 @@ const Admin = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {menuItems.map((item) => (
                     <div key={item.id} className="border border-border rounded-lg p-4">
+<<<<<<< HEAD
                       {/* Item Image */}
                       <div className="w-full h-32 mb-3 rounded-lg overflow-hidden">
                         <img 
@@ -708,6 +890,8 @@ const Admin = () => {
                         />
                       </div>
                       
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h4 className="font-semibold">{item.name}</h4>
@@ -728,7 +912,11 @@ const Admin = () => {
                         </div>
                       </div>
                       
+<<<<<<< HEAD
                       <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+=======
+                      <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                       
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-primary">₹{item.price}</span>
@@ -752,11 +940,15 @@ const Admin = () => {
           <TabsContent value="users" className="space-y-6">
             <Card className="shadow-lg">
               <CardHeader>
+<<<<<<< HEAD
                 <div className="flex items-center justify-between">
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 <CardTitle className="flex items-center">
                   <Users className="w-5 h-5 mr-2" />
                   User Management
                 </CardTitle>
+<<<<<<< HEAD
                   <Button 
                     onClick={fetchUsers} 
                     disabled={usersLoading}
@@ -845,6 +1037,16 @@ const Admin = () => {
                     ))}
                   </div>
                 )}
+=======
+              </CardHeader>
+              <CardContent>
+                <Alert>
+                  <AlertDescription>
+                    User management features will be available once connected to Supabase.
+                    This will include user registration approval, role management, and account settings.
+                  </AlertDescription>
+                </Alert>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
               </CardContent>
             </Card>
           </TabsContent>

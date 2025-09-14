@@ -18,11 +18,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   // Only allow registered users (not guests) for protected routes
+<<<<<<< HEAD
   if (!user) {
+=======
+  if (!user || isGuest) {
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
 };
 
+<<<<<<< HEAD
 export default ProtectedRoute;
+=======
+export default ProtectedRoute;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d

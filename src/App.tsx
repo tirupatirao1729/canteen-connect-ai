@@ -12,7 +12,10 @@ import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 import Reviews from "./pages/Reviews";
 import Profile from "./pages/Profile";
+<<<<<<< HEAD
 import AdminProfile from "./pages/AdminProfile";
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 import Cart from "./pages/Cart";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -22,7 +25,11 @@ const queryClient = new QueryClient();
 
 // Component to handle authentication-based routing
 const AppRoutes = () => {
+<<<<<<< HEAD
   const { user, isGuest, loading } = useAuth();
+=======
+  const { user, loading } = useAuth();
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   if (loading) {
     return (
@@ -35,8 +42,13 @@ const AppRoutes = () => {
     );
   }
 
+<<<<<<< HEAD
   // If user is not authenticated (not logged in and not guest), show login
   if (!user && !isGuest) {
+=======
+  // If user is not authenticated, show login
+  if (!user) {
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     return (
       <BrowserRouter>
         <Routes>
@@ -48,7 +60,11 @@ const AppRoutes = () => {
     );
   }
 
+<<<<<<< HEAD
   // If user is authenticated (logged in or guest), show full app
+=======
+  // If user is authenticated, show full app
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   return (
     <BrowserRouter>
       <Navigation />
@@ -60,7 +76,10 @@ const AppRoutes = () => {
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+<<<<<<< HEAD
         <Route path="/admin-profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />

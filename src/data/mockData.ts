@@ -154,7 +154,11 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: '3',
+<<<<<<< HEAD
     userName: 'Anonymous Guest',
+=======
+    userName: 'Anonymous User',
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     itemId: 3,
     itemName: 'Veg Sandwich',
     rating: 4,

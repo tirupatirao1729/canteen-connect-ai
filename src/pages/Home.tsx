@@ -26,7 +26,11 @@ import masalaDosa from '@/assets/masala-dosa.jpg';
 const Home = () => {
   const { addToCart } = useCart();
   const { toast } = useToast();
+<<<<<<< HEAD
   const { user, isGuest } = useAuth();
+=======
+  const { user } = useAuth();
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   // Get special items from menu
   const specialItems = MENU_ITEMS.filter((item: any) => item.isSpecial).slice(0, 3);
@@ -64,7 +68,11 @@ const Home = () => {
               <div className="flex justify-center mb-6">
                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
                   <Sparkles className="w-4 h-4 mr-2" />
+<<<<<<< HEAD
                   {user ? `Welcome back, ${user.fullName}!` : isGuest ? 'Welcome, Guest!' : 'Welcome to Canteen Connect'}
+=======
+                  {user ? `Welcome back, ${user.fullName}!` : 'Welcome to Canteen Connect'}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 </Badge>
               </div>
               

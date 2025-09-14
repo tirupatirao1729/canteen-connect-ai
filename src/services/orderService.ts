@@ -22,7 +22,10 @@ export interface CreateOrderData {
   contactNumber: string;
   paymentMethod: string;
   specialInstructions?: string;
+<<<<<<< HEAD
   isGuestOrder?: boolean;
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 }
 
 export const orderService = {
@@ -146,6 +149,7 @@ export const orderService = {
       console.error('Error deleting order:', error);
       return { success: false, error: error.message };
     }
+<<<<<<< HEAD
   },
 
   // Subscribe to real-time order updates
@@ -205,6 +209,8 @@ export const orderService = {
       console.error('Error fetching order stats:', error);
       return { success: false, error: error.message };
     }
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   }
 };
 

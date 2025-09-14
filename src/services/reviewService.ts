@@ -1,16 +1,26 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Review {
+<<<<<<< HEAD
   id: string;
   user_id: string;
+=======
+  id: number;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   user_name: string;
   user_role: string;
   item_name: string;
   rating: number;
   comment: string;
+<<<<<<< HEAD
   likes: number;
   avatar: string;
   created_at: string;
+=======
+  date: string;
+  likes: number;
+  avatar: string;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 }
 
 export interface CreateReviewData {
@@ -23,6 +33,7 @@ export interface CreateReviewData {
 }
 
 export const reviewService = {
+<<<<<<< HEAD
   // Get all reviews with user information
   async getReviews(): Promise<{ success: boolean; reviews?: Review[]; error?: string }> {
     try {
@@ -68,6 +79,61 @@ export const reviewService = {
       }));
 
       return { success: true, reviews: transformedReviews };
+=======
+  // Get all reviews
+  async getReviews(): Promise<{ success: boolean; reviews?: Review[]; error?: string }> {
+    try {
+      // For now, return mock data since we don't have a reviews table
+      // In a real app, you would query the reviews table here
+      const mockReviews: Review[] = [
+        {
+          id: 1,
+          user_name: "Arjun Kumar",
+          user_role: "Student",
+          item_name: "Chicken Biryani",
+          rating: 5,
+          comment: "Absolutely delicious! The biryani was perfectly cooked with tender chicken and aromatic rice. Definitely ordering again!",
+          date: "2024-01-15",
+          likes: 12,
+          avatar: "AK"
+        },
+        {
+          id: 2,
+          user_name: "Priya Sharma",
+          user_role: "Teacher",
+          item_name: "Masala Dosa",
+          rating: 4,
+          comment: "Great taste and quick delivery. The dosa was crispy and the chutneys were fresh. Could use a bit more spice in the potato filling.",
+          date: "2024-01-14",
+          likes: 8,
+          avatar: "PS"
+        },
+        {
+          id: 3,
+          user_name: "Rahul Singh",
+          user_role: "Student",
+          item_name: "Veg Sandwich",
+          rating: 5,
+          comment: "Perfect for a quick snack between classes. Fresh vegetables and the mint chutney is amazing!",
+          date: "2024-01-13",
+          likes: 15,
+          avatar: "RS"
+        },
+        {
+          id: 4,
+          user_name: "Dr. Meera Patel",
+          user_role: "Teacher",
+          item_name: "Paneer Butter Masala",
+          rating: 4,
+          comment: "Rich and creamy curry. The paneer was soft and well-cooked. Great portion size for the price.",
+          date: "2024-01-12",
+          likes: 6,
+          avatar: "MP"
+        }
+      ];
+
+      return { success: true, reviews: mockReviews };
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     } catch (error: any) {
       console.error('Error fetching reviews:', error);
       return { success: false, error: error.message };
@@ -75,6 +141,7 @@ export const reviewService = {
   },
 
   // Create a new review
+<<<<<<< HEAD
   async createReview(reviewData: CreateReviewData): Promise<{ success: boolean; review?: Review; error?: string }> {
     try {
       const { data, error } = await supabase
@@ -119,6 +186,15 @@ export const reviewService = {
       };
 
       return { success: true, review: transformedReview };
+=======
+  async createReview(reviewData: CreateReviewData): Promise<{ success: boolean; reviewId?: number; error?: string }> {
+    try {
+      // For now, return mock success since we don't have a reviews table
+      // In a real app, you would insert into the reviews table here
+      const reviewId = Date.now();
+      
+      return { success: true, reviewId };
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     } catch (error: any) {
       console.error('Error creating review:', error);
       return { success: false, error: error.message };
@@ -126,6 +202,7 @@ export const reviewService = {
   },
 
   // Like a review
+<<<<<<< HEAD
   async likeReview(reviewId: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
@@ -138,11 +215,18 @@ export const reviewService = {
         return { success: false, error: error.message };
       }
 
+=======
+  async likeReview(reviewId: number): Promise<{ success: boolean; error?: string }> {
+    try {
+      // For now, return mock success since we don't have a reviews table
+      // In a real app, you would update the likes count in the reviews table
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       return { success: true };
     } catch (error: any) {
       console.error('Error liking review:', error);
       return { success: false, error: error.message };
     }
+<<<<<<< HEAD
   },
 
   // Subscribe to real-time review updates
@@ -223,3 +307,10 @@ export const reviewService = {
     return { success: false, error: 'Max retries exceeded' };
   }
 };
+=======
+  }
+};
+
+
+
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d

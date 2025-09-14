@@ -26,7 +26,11 @@ import {
 const Cart = () => {
   const navigate = useNavigate();
   const { items, removeFromCart, addToCart, updateQuantity, clearCart, getTotalPrice } = useCart();
+<<<<<<< HEAD
   const { user, isGuest } = useAuth();
+=======
+  const { user } = useAuth();
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   const { toast } = useToast();
   
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'details' | 'payment' | 'confirmation'>('cart');
@@ -92,7 +96,11 @@ const Cart = () => {
   const handlePlaceOrder = async () => {
     try {
       const orderData = {
+<<<<<<< HEAD
         userId: user?.id || 'guest',
+=======
+        userId: user?.id,
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         items: items.map(item => ({
           id: item.id,
           name: item.name,
@@ -106,7 +114,11 @@ const Cart = () => {
         contactNumber: orderDetails.contactNumber,
         paymentMethod: orderDetails.paymentMethod,
         specialInstructions: '',
+<<<<<<< HEAD
         isGuestOrder: isGuest
+=======
+        isGuestOrder: false
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       };
 
       const result = await orderService.createOrder(orderData);
@@ -309,6 +321,7 @@ const Cart = () => {
                       />
                     </div>
 
+<<<<<<< HEAD
                     {isGuest && (
                       <Alert>
                         <AlertDescription>
@@ -316,6 +329,8 @@ const Cart = () => {
                         </AlertDescription>
                       </Alert>
                     )}
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </CardContent>
                 </Card>
               )}

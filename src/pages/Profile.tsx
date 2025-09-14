@@ -191,10 +191,13 @@ const Profile = () => {
               <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
               <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-white/90">
                 <div className="flex items-center">
+<<<<<<< HEAD
                   <User className="w-4 h-4 mr-2" />
                   ID: {authUser?.id?.slice(0, 8) || 'N/A'}
                 </div>
                 <div className="flex items-center">
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   <Mail className="w-4 h-4 mr-2" />
                   {user.email}
                 </div>

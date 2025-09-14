@@ -38,7 +38,11 @@ const Login = () => {
   const [showAdminSignup, setShowAdminSignup] = useState(false);
   const [otpData, setOtpData] = useState({ contact: '', type: 'email' as 'email' | 'phone', purpose: 'login' as any });
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+<<<<<<< HEAD
   const { login, register, resetPassword, loginAsGuest } = useAuth();
+=======
+  const { login, register, resetPassword } = useAuth();
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -265,6 +269,7 @@ const Login = () => {
                     >
                       Forgot Password?
                     </Button>
+<<<<<<< HEAD
                     
                     <div className="relative">
                       <div className="absolute inset-0 flex items-center">
@@ -291,6 +296,8 @@ const Login = () => {
                     >
                       Continue as Guest
                     </Button>
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </div>
                 </form>
               </TabsContent>

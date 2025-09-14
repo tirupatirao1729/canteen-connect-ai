@@ -25,7 +25,11 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
     specialInstructions: ''
   });
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
+<<<<<<< HEAD
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'upi'>('cash');
+=======
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash');
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   const [requireOTP, setRequireOTP] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -97,7 +101,10 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
 
     try {
       // Create order in database
+<<<<<<< HEAD
       const normalizedPaymentMethod = paymentMethod === 'cash' ? 'cash' : 'upi';
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       const orderData = {
         user_id: '00000000-0000-0000-0000-000000000000', // Guest user ID
         items: JSON.parse(JSON.stringify(items)), // Convert to JSON
@@ -105,8 +112,13 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
         room_number: formData.roomNumber || null,
         special_instructions: formData.specialInstructions || null,
         status: 'pending',
+<<<<<<< HEAD
         payment_status: 'pending',
         payment_method: normalizedPaymentMethod,
+=======
+        payment_status: paymentMethod === 'cash' ? 'cash_on_delivery' : 'pending',
+        payment_method: paymentMethod,
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         order_number: `GUEST-${Date.now()}`
       };
 
@@ -261,7 +273,11 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
               <Label>Payment Method *</Label>
               <RadioGroup
                 value={paymentMethod}
+<<<<<<< HEAD
                 onValueChange={(value) => setPaymentMethod(value as 'cash' | 'upi')}
+=======
+                onValueChange={(value) => setPaymentMethod(value as 'cash' | 'online')}
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                 className="flex gap-6"
               >
                 <div className="flex items-center space-x-2">
@@ -272,10 +288,17 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
+<<<<<<< HEAD
                   <RadioGroupItem value="upi" id="upi" />
                   <Label htmlFor="upi" className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4" />
                     UPI
+=======
+                  <RadioGroupItem value="online" id="online" />
+                  <Label htmlFor="online" className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" />
+                    Online Payment
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </Label>
                 </div>
               </RadioGroup>
@@ -309,7 +332,11 @@ const GuestCheckoutForm = ({ isOpen, onClose, onSuccess }: GuestCheckoutFormProp
                   </div>
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Payment</span>
+<<<<<<< HEAD
                     <span>{paymentMethod === 'cash' ? 'Cash on Delivery' : 'UPI'}</span>
+=======
+                    <span>{paymentMethod === 'cash' ? 'Cash on Delivery' : 'Online Payment'}</span>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </div>
                 </div>
               </div>

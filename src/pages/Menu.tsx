@@ -31,7 +31,11 @@ import {
 
 const Menu = () => {
   const { addToCart, removeFromCart, getItemQuantity, getTotalItems } = useCart();
+<<<<<<< HEAD
   const { user, isGuest, isAdmin } = useAuth();
+=======
+  const { user } = useAuth();
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -73,6 +77,7 @@ const Menu = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Our Menu</h1>
           <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
+<<<<<<< HEAD
             {isAdmin 
               ? "View and manage menu items - Add to cart functionality is disabled for admin users"
               : "Discover delicious meals prepared fresh daily with authentic flavors and quality ingredients"
@@ -84,6 +89,10 @@ const Menu = () => {
               Admin View - Read Only
             </div>
           )}
+=======
+            Discover delicious meals prepared fresh daily with authentic flavors and quality ingredients
+          </p>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         </div>
       </div>
 
@@ -145,8 +154,13 @@ const Menu = () => {
             Showing {filteredItems.length} of {MENU_ITEMS.length} items
           </p>
           
+<<<<<<< HEAD
           {/* Cart Summary - Hidden for Admin */}
           {!isAdmin && getTotalItems() > 0 && (
+=======
+          {/* Cart Summary */}
+          {getTotalItems() > 0 && (
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
             <Badge variant="default" className="bg-primary text-primary-foreground px-4 py-2">
               <ShoppingCart className="w-4 h-4 mr-2" />
               {getTotalItems()} items in cart
@@ -219,6 +233,7 @@ const Menu = () => {
                       ₹{item.price}
                     </span>
                     
+<<<<<<< HEAD
                     {/* Cart Controls - Hidden for Admin */}
                     {!isAdmin && (
                       <div className="flex items-center space-x-2">
@@ -255,6 +270,41 @@ const Menu = () => {
                         )}
                       </div>
                     )}
+=======
+                    <div className="flex items-center space-x-2">
+                      {getItemQuantity(item.id) > 0 ? (
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRemoveFromCart(item.id)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="font-medium w-8 text-center">
+                            {getItemQuantity(item.id)}
+                          </span>
+                          <Button
+                            size="sm"
+                            onClick={() => handleAddToCart(item)}
+                            className="h-8 w-8 p-0 bg-primary hover:bg-primary-hover"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => handleAddToCart(item)}
+                          className="bg-gradient-primary hover:bg-primary-hover btn-bounce"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add
+                        </Button>
+                      )}
+                    </div>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
                   </div>
                 </div>
               </CardContent>
@@ -283,8 +333,13 @@ const Menu = () => {
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Fixed Cart Button - Hidden for Admin */}
         {!isAdmin && getTotalItems() > 0 && (
+=======
+        {/* Fixed Cart Button */}
+        {getTotalItems() > 0 && (
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
           <div className="fixed bottom-6 right-6 z-50">
             <Link to="/cart">
               <Button 

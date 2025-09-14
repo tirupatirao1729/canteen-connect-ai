@@ -24,6 +24,7 @@ const Navigation = () => {
   const { getTotalItems } = useCart();
 
   const navItems = [
+<<<<<<< HEAD
     { path: '/home', label: 'Home', icon: Home, requiresAuth: true },
     // Hide menu, cart, and orders for admin users
     ...(isAdmin ? [] : [
@@ -37,13 +38,26 @@ const Navigation = () => {
     ] : []),
     ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield, requiresAuth: true }] : []),
   ].filter(item => !item.requiresAuth || user || isGuest);
+=======
+    { path: '/home', label: 'Home', icon: Home },
+    { path: '/menu', label: 'Menu', icon: UtensilsCrossed },
+    { path: '/reviews', label: 'Reviews', icon: Star },
+    ...(user || isGuest ? [{ path: '/orders', label: 'Orders', icon: ShoppingBag }] : []),
+    ...(user && !isGuest ? [{ path: '/profile', label: 'Profile', icon: User }] : []),
+    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
+  ];
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   const isActivePath = (path: string) => location.pathname === path;
 
   // Don't show navigation if user is not authenticated
+<<<<<<< HEAD
   if (!user && !isGuest) {
     return null;
   }
+=======
+  if (!user && !isGuest) return null;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -83,6 +97,7 @@ const Navigation = () => {
 
           {/* Cart & Auth */}
           <div className="flex items-center space-x-2">
+<<<<<<< HEAD
             {/* Hide cart button for admin users */}
             {!isAdmin && (
               <Link to="/cart">
@@ -99,6 +114,21 @@ const Navigation = () => {
                 </Button>
               </Link>
             )}
+=======
+            <Link to="/cart">
+              <Button variant="outline" size="sm" className="relative hover:bg-accent">
+                <ShoppingCart className="w-4 h-4" />
+                {getTotalItems() > 0 && (
+                  <Badge 
+                    variant="default" 
+                    className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-primary text-primary-foreground text-xs"
+                  >
+                    {getTotalItems()}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
             
             {user || isGuest ? (
               <div className="flex items-center space-x-2">
@@ -162,4 +192,8 @@ const Navigation = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Navigation;
+=======
+export default Navigation;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d

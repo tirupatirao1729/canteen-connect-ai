@@ -20,10 +20,15 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isAdmin: boolean;
+<<<<<<< HEAD
   isGuest: boolean;
   login: (identifier: string, password: string, adminCode?: string) => Promise<{ success: boolean; error?: string }>;
   register: (userData: RegisterData) => Promise<{ success: boolean; error?: string }>;
   loginAsGuest: () => void;
+=======
+  login: (identifier: string, password: string, adminCode?: string) => Promise<{ success: boolean; error?: string }>;
+  register: (userData: RegisterData) => Promise<{ success: boolean; error?: string }>;
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   logout: () => void;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   loading: boolean;
@@ -46,7 +51,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+<<<<<<< HEAD
   const [isGuest, setIsGuest] = useState(false);
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   const [loading, setLoading] = useState(true);
 
   const isAdmin = user?.role === 'Admin';
@@ -55,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let mounted = true;
 
+<<<<<<< HEAD
     // Check if user is in guest mode first
     const savedGuest = localStorage.getItem('canteen_guest');
     if (savedGuest) {
@@ -63,6 +72,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -117,7 +128,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           setUser(null);
         }
+<<<<<<< HEAD
         setIsGuest(false);
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         setLoading(false);
       }
     );
@@ -187,7 +201,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
 
+<<<<<<< HEAD
       setIsGuest(false);
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       localStorage.removeItem('canteen_guest');
       
       return { success: true };
@@ -231,6 +248,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // If user was created successfully, create profile
       if (data.user) {
+<<<<<<< HEAD
         try {
           const { error: profileError } = await supabase
             .from('profiles')
@@ -277,6 +295,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (emailError) {
           console.error('Welcome email failed:', emailError);
           // Don't fail registration if email fails
+=======
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: data.user.id,
+            full_name: userData.fullName,
+            phone: userData.phone,
+            roll_number: userData.rollNumber,
+            role: userData.role,
+            date_of_birth: userData.dateOfBirth,
+            year_of_study: userData.yearOfStudy,
+            branch: userData.branch
+          });
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+          // Don't fail registration if profile creation fails
+        }
+
+        // Send welcome email only if email confirmation is not required
+        if (!needsEmailConfirmation) {
+          try {
+            await emailService.sendWelcomeEmail({
+              email: userData.email,
+              fullName: userData.fullName,
+              role: userData.role,
+              rollNumber: userData.rollNumber
+            });
+          } catch (emailError) {
+            console.error('Welcome email failed:', emailError);
+            // Don't fail registration if email fails
+          }
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
         }
       }
 
@@ -292,19 +343,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+<<<<<<< HEAD
   const loginAsGuest = () => {
     setUser(null);
     setIsGuest(true);
     localStorage.setItem('canteen_guest', 'true');
     localStorage.removeItem('canteen_user');
   };
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
 
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+<<<<<<< HEAD
     setIsGuest(false);
     localStorage.removeItem('canteen_guest');
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   };
 
   const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
@@ -328,10 +385,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user,
       session,
       isAdmin,
+<<<<<<< HEAD
       isGuest,
       login,
       register,
       loginAsGuest,
+=======
+      login,
+      register,
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       logout,
       resetPassword,
       loading

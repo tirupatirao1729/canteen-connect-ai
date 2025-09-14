@@ -207,6 +207,7 @@ const ProfileEdit = ({ onClose }: ProfileEditProps) => {
             </div>
 
             <div className="space-y-2">
+<<<<<<< HEAD
               <Label htmlFor="userId">User ID</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -218,6 +219,15 @@ const ProfileEdit = ({ onClose }: ProfileEditProps) => {
                 />
               </div>
               <p className="text-xs text-muted-foreground">User ID cannot be changed</p>
+=======
+              <Label htmlFor="rollNumber">Roll Number</Label>
+              <Input
+                id="rollNumber"
+                value={formData.rollNumber}
+                onChange={(e) => setFormData({...formData, rollNumber: e.target.value.toUpperCase()})}
+                placeholder="Enter roll number"
+              />
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
             </div>
 
             <div className="space-y-2">
@@ -249,6 +259,7 @@ const ProfileEdit = ({ onClose }: ProfileEditProps) => {
             </div>
 
             <div className="space-y-2">
+<<<<<<< HEAD
               <Label htmlFor="rollNumber">Roll Number</Label>
               <Input
                 id="rollNumber"
@@ -259,6 +270,8 @@ const ProfileEdit = ({ onClose }: ProfileEditProps) => {
             </div>
 
             <div className="space-y-2">
+=======
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
               <Label htmlFor="dateOfBirth">Date of Birth</Label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />

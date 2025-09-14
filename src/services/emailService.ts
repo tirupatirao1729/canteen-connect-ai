@@ -131,6 +131,7 @@ export class EmailService {
     }
   }
 
+<<<<<<< HEAD
   // Fallback: Send email using external service (EmailJS, Resend, SendGrid, etc.)
   async sendEmailViaExternalService(emailData: EmailData): Promise<{ success: boolean; error?: string }> {
     try {
@@ -155,6 +156,18 @@ export class EmailService {
       
       // For now, we'll return success to prevent registration failures
       // In production, implement actual email sending here
+=======
+  // Fallback: Send email using external service (Resend, SendGrid, etc.)
+  async sendEmailViaExternalService(emailData: EmailData): Promise<{ success: boolean; error?: string }> {
+    try {
+      // This would integrate with services like Resend, SendGrid, etc.
+      // For now, we'll simulate success
+      console.log('Sending email via external service:', emailData);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
       return { success: true };
     } catch (error: any) {
       console.error('External email service error:', error);
@@ -164,6 +177,7 @@ export class EmailService {
 
   // Main method to send emails with fallback
   async sendEmail(emailData: EmailData): Promise<{ success: boolean; error?: string }> {
+<<<<<<< HEAD
     // In production, skip Supabase email if not configured and go directly to fallback
     const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     
@@ -191,6 +205,18 @@ export class EmailService {
       console.log('Supabase email failed, trying external service...');
       return await this.sendEmailViaExternalService(emailData);
     }
+=======
+    // Try Supabase first
+    const supabaseResult = await this.sendEmailViaSupabase(emailData);
+    
+    if (supabaseResult.success) {
+      return supabaseResult;
+    }
+
+    // Fallback to external service
+    console.log('Supabase email failed, trying external service...');
+    return await this.sendEmailViaExternalService(emailData);
+>>>>>>> 3ffd7d63b4ac680784cdacc977be31f1e218b66d
   }
 
   // Send welcome email after registration
